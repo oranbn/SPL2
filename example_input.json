@@ -1,0 +1,147 @@
+{
+    "Students":
+    [
+        {
+            "name": "Simba",
+            "department": "Computer Science",            
+            "status": "MSc",
+            "models":
+            [
+                {
+                    "name": "YOLO10",
+                    "type": "images",
+                    "size": 200000
+                },
+                {
+                    "name": "ResNet9000",
+                    "type": "images",
+                    "size": 200000
+                },
+                {
+                    "name": "LessEfficientNet",
+                    "type": "images",
+                    "size": 20000
+                },
+                {
+                    "name": "DensestNet",
+                    "type": "images",
+                    "size": 200000
+                }
+            ]
+
+        },
+        {
+            "name": "Zazu",
+            "department": "EE",            
+            "status": "PhD",
+            "models":
+            [
+                {
+                    "name": "VIT",
+                    "type": "images",
+                    "size": 100000000
+                }
+            ]
+
+        },
+        {
+            "name": "Pumba",
+            "department": "Computer Science",            
+            "status": "PhD",
+            "models":
+            [
+                {
+                    "name": "Bert",
+                    "type": "Text",
+                    "size": 1000000
+                },
+                {
+                    "name": "GPT4",
+                    "type": "Text",
+                    "size": 1000000
+                },
+                {
+                    "name": "GPT5",
+                    "type": "Text",
+                    "size": 200000
+                },
+                {
+                    "name": "GPT10",
+                    "type": "Text",
+                    "size": 50000
+                }
+            ]
+
+        },
+        {
+            "name": "Timon",
+            "department": "SE",            
+            "status": "MsC",
+            "models":
+            [
+                {
+                    "name": "Percepetron",
+                    "type": "Tabular",
+                    "size": 1000000
+                },
+                {
+                    "name": "GNN",
+                    "type": "Tabular",
+                    "size": 1000000
+                },
+                {
+                    "name": "MoreStyleGAN",
+                    "type": "Images",
+                    "size": 100000
+                },
+                {
+                    "name": "ConditionalGAN",
+                    "type": "Images",
+                    "size": 500000
+                }
+            ]
+
+        },
+        {
+            "name": "Nala",
+            "department": "Computer Science",            
+            "status": "PhD",
+            "models":
+            [
+                {
+                    "name": "YOLO9000",
+                    "type": "images",
+                    "size": 100000
+                },
+                {
+                    "name": "VIT2",
+                    "type": "images",
+                    "size": 1000000
+                },
+                {
+                    "name": "MuchMoreEfficientNet",
+                    "type": "images",
+                    "size": 20000
+                },
+                {
+                    "name": "DenserNet",
+                    "type": "images",
+                    "size": 100000
+                }
+            ]
+
+        }
+    ],
+    "GPUS": ["RTX3090","RTX3090","RTX2080","GTX1080"],
+    "CPUS": [32,32,32,16,16,16,16],
+    "Conferences":
+    [
+        {"name": "ICML", "date": 2000},
+        {"name": "NeurIPS", "date": 2500},
+        {"name": "CVPR", "date": 3000},
+        {"name": "ECCV", "date": 4000},
+        {"name": "AISTATS", "date": 5000}
+    ],
+    "TickTime": 50,
+    "Duration": 5500
+}
