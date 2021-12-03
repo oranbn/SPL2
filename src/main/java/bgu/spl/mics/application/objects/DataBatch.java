@@ -13,4 +13,7 @@ public class DataBatch {
        this.start_index = start_index;
     }
 
+    public Data getData() {
+        return data;
+    }
 }

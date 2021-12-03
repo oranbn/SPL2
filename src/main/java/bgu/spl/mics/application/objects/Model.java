@@ -6,6 +6,8 @@ package bgu.spl.mics.application.objects;
  * Add fields and methods to this class as you see fit (including public methods and constructors).
  */
 public class Model {
+
+
     /**
      * Enum representing the Data Status.
      */
@@ -31,5 +33,8 @@ public class Model {
         this.student = student;
         this.status = status;
         this.results = results;
+    }
+    public Data getData() {
+        return data;
     }
 }

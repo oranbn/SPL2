@@ -26,8 +26,8 @@ public class Student {
         this.papersRead = papersRead;
     }
 
-    public void trainModel{}
+/*    public void trainModel{}
 
-    public void testModel{}
+    public void testModel{}*/
 
 }

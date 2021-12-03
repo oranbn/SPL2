@@ -14,7 +14,7 @@ import bgu.spl.mics.MicroService;
 public class GPUService extends MicroService {
 
     public GPUService(String name) {
-        super("Change_This_Name");
+        super(name);
         // TODO Implement this
     }
 
