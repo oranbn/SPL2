@@ -11,14 +11,16 @@ import java.util.concurrent.TimeUnit;
  * No public constructor is allowed except for the empty constructor.
  */
 public class Future<T> {
-
-
-	
+	/**
+	 *@INV: none
+	 */
+	T result;
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
 	public Future() {
 		//TODO: implement this
+		result = null;
 	}
 	
 	/**
@@ -27,26 +29,34 @@ public class Future<T> {
      * not been completed.
      * <p>
      * @return return the result of type T if it is available, if not wait until it is available.
-     * 	       
+     * @PRE: none
+	 * @POST: @return result
      */
 	public T get() {
 		//TODO: implement this.
-		return null;
+		while(result == null) {}
+		return result;
 	}
 	
 	/**
      * Resolves the result of this Future object.
+	 * @PRE: result == null
+	 * @POST: result != null
      */
 	public void resolve (T result) {
 		//TODO: implement this.
+		if(result!=null & this.result==null)
+			this.result = result;
 	}
 	
 	/**
      * @return true if this object has been resolved, false otherwise
+	 * @PRE: none
+	 * @POST: @return result!=null
      */
 	public boolean isDone() {
 		//TODO: implement this.
-		return false;
+		return result!=null;
 	}
 	
 	/**
@@ -54,11 +64,15 @@ public class Future<T> {
      * This method is non-blocking, it has a limited amount of time determined
      * by {@code timeout}
      * <p>
-     * @param timout 	the maximal amount of time units to wait for the result.
+     * @param timeout 	the maximal amount of time units to wait for the result.
      * @param unit		the {@link TimeUnit} time units to wait.
      * @return return the result of type T if it is available, if not, 
      * 	       wait for {@code timeout} TimeUnits {@code unit}. If time has
      *         elapsed, return null.
+	 * @PRE: none
+	 * @POST: @return result if future was resolved inside the timeout limit.
+	 * 		  Else, if it has been resolved in the time limit, return result.
+	 * 		  Else, if in the time limit it hasn't been resolved, return null.
      */
 	public T get(long timeout, TimeUnit unit) {
 		//TODO: implement this.

@@ -1,8 +1,6 @@
 package bgu.spl.mics.application.objects;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Passive object representing a single GPU.
@@ -18,89 +16,114 @@ public class GPU {
     private Type type;
     private Model model;
     private Cluster cluster;
-    private int id;
-    private List<DataBatch> unProcessedDataBatch;
-    private List<DataBatch> processedDataBatch;
-    int ticksNeeded;
-    int ticks;
-    int dataBatchAmount;
-    int processedDataBatchesAmount;
-    public GPU(Type type, Cluster cluster, int id){
+    private int id; //gpu id to pass forward
+    private Queue<DataBatch> processedDataBatch;
+    private int ticksNeeded;
+    private int currentTicks;
+    private int dataBatchAmount; //how many batches we got from the data
+    private int processedDataBatchesAmount; //limit of queue size
+
+    public GPU(Type type, Cluster cluster, int id) {
         this.type = type;
         this.cluster = cluster;
         this.id = id;
-        dataBatchAmount=0;
-        switch(type){
+        dataBatchAmount = 0;
+        switch (type) {
             case GTX1080:
-                ticksNeeded=4;
+                ticksNeeded = 4;
                 processedDataBatchesAmount = 8;
                 break;
             case RTX2080:
-                ticksNeeded=2;
+                ticksNeeded = 2;
                 processedDataBatchesAmount = 16;
                 break;
             case RTX3090:
-                ticksNeeded=1;
+                ticksNeeded = 1;
                 processedDataBatchesAmount = 32;
                 break;
         }
-        ticks = ticksNeeded;
-        unProcessedDataBatch = new ArrayList<DataBatch>();
-        processedDataBatch = new ArrayList<DataBatch>();
-        makeDataBatch();
+        currentTicks = ticksNeeded;
+        processedDataBatch = new LinkedList<DataBatch>();
     }
-    public void trainModel(Model m)
-    {
-        while(model!=null)
-        {}
+
+    public boolean trainModel(Model m) {
+        if (model != null)
+            return false;
         model = m;
+        Model.Status status = Model.Status.Training;
+        model.setStatus(status);
+        splitDataToBatches();
+        return true;
+        //might want to set model as null at the end
     }
-    public Data getData()
+
+    public boolean testModel(Model m) {
+        if (model != null)
+            return false;
+        model = m;
+        doTest();
+        return true;
+    }
+    public int getId()
     {
+        return id;
+    }
+    private void doTest() {
+        // check if student is phd or something else and do randomize and send it back to the gpu service and he will send it back to the bus)
+        // set m.result = good/bad - if phd 0.2 good 0.8 bad / second one is 0.1 good 0.9 bad
+        // set model = null;
+    }
+
+    public Data getData() {
         return model.getData();
     }
-    public void makeDataBatch()
-    {
+
+    public int getDataSize() {
+        return getData().getSize();
+    }
+
+    public void splitDataToBatches() {
         Data data = getData();
-        int size = data.getSize();
-        int index=0;
-        while(size>0)
-        {
-            size -= 1000;
-            unProcessedDataBatch.add(new DataBatch(data,index));
+        int dataSize = getDataSize();
+        List<DataBatch> unProcessedDataBatch = new ArrayList<>();
+        int index = 0;
+        while (index < dataSize) {
+            unProcessedDataBatch.add(new DataBatch(data, index));
             index += 1000;
             dataBatchAmount++;
         }
+        cluster.process(unProcessedDataBatch, id);
     }
-    public void sendUnProcessedDataBatch()
-    {
-        if(unProcessedDataBatch.size()>0)
-        cluster.unprocessedData(unProcessedDataBatch.remove(0), id);
-    }
-    public void tick()
-    {
-        if(processedDataBatch.size()==0)
+
+    public void tick() {
+        if (currentTicks == 0)
             return;
-        ticks--;
-        if(ticks==0)
-        {
-            processedDataBatch.remove(0);
-            ticks = ticksNeeded;
+        currentTicks--;
+        if (currentTicks == 0) {
+            processedDataBatch.poll();
+            currentTicks = ticksNeeded;
             dataBatchAmount--;
             getData().process();
-            if(dataBatchAmount==0)
+            if (dataBatchAmount == 0)
                 finishProcess();
+            else
+                cluster.getNextDataBatches(id);
         }
     }
-    public boolean processDataBatch(DataBatch dataBatch)
+
+    public boolean addProcessedDataBatches(DataBatch dataBatch)
     {
         if(processedDataBatch.size()==processedDataBatchesAmount)
-            return false; //
+            return false;
         processedDataBatch.add(dataBatch);
         return true;
     }
-    private void finishProcess()
-    {
-        // finish process return a result or something...
-    }
+
+    public void finishProcess(){
+        Model.Status status = Model.Status.Trained;
+        model.setStatus(status);
+        model = null;
+}
+
+
 }

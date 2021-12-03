@@ -1,8 +1,5 @@
 package bgu.spl.mics.application;
 
-import bgu.spl.mics.application.objects.Cluster;
-import bgu.spl.mics.application.services.GPUService;
-
 /** This is the Main class of Compute Resources Management System application. You should parse the input file,
  * create the different instances of the objects, and run the system.
  * In the end, you should output a text file.

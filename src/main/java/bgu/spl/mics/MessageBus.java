@@ -1,5 +1,8 @@
 package bgu.spl.mics;
 
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * The message-bus is a shared object used for communication between
  * micro-services.
@@ -10,7 +13,6 @@ package bgu.spl.mics;
  * You cannot add methods to this interface.
  */
 public interface MessageBus {
-
     /**
      * Subscribes {@code m} to receive {@link Event}s of type {@code type}.
      * <p>
