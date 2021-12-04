@@ -6,6 +6,15 @@ package bgu.spl.mics.application.objects;
  */
 public class Model {
 
+
+    public Results getResults() {
+        return results;
+    }
+
+    public void setResults(Results results) {
+        this.results = results;
+    }
+
     /**
      * Enum representing the Data Status.
      */
@@ -41,5 +50,8 @@ public class Model {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+    public Student getStudent() {
+        return student;
     }
 }

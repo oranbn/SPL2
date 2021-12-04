@@ -48,12 +48,30 @@ public class CPU {
     }
 
     /**
+     * @return return the DataBatch of the class
+     * @PRE: none
+     * @POST: @return dataBatch
+     */
+    public DataBatch getDataBatch() {
+        return dataBatch;
+    }
+
+    /**
      * @return return the int value of the Id of the gpu the cpu's currently working on its databatches
      * @PRE: none
      * @POST: @return gpuID
      */
     public int getGpuID() {
         return gpuID;
+    }
+
+    /**
+     * @return return the int value of the ticks needed for a single process
+     * @PRE: none
+     * @POST: @return ticks
+     */
+    public int getTicks() {
+        return ticks;
     }
 
     /**
@@ -78,17 +96,14 @@ public class CPU {
      * while setting the ticks amount needed according to the data type
      * <p>
      * @return none
-     * @PRE: getProcessing() == false
-     *       getDataBatch() == false
-     *
-     *
-     *
-     * @POST: getProcessing() == true
-     *        
-     *
-     *
-     *
-     *
+     * @PRE: getGpuID() == null
+     *       getDataBatch() == null
+     *       getTicks() == 0
+     *       getProcessing() == false
+     * @POST: getGpuID != null
+     *        getDataBatch() != null
+     *        getTicks != 0
+     *        getProcessing() == true
      */
     public void process(DataBatch dataBatch, int id) {
         this.gpuID = id;
@@ -108,6 +123,17 @@ public class CPU {
         processing = true;
     }
 
+    /**
+     * This function countdown the ticks amount needed for the processing process to end
+     * <p>
+     * @return none
+     * @PRE: none
+     * @POST:   if ticks = 0, none
+     *          else, ticks == @pre(ticks) - 1
+     *          if ticks = 0, getProcessing() == false,
+     *                        cluster takes the processed data batch,
+     *                        and gives the cpu the new unprocessed dataBatch
+     */
     public void tick() {
         if (ticks == 0)
             return;
