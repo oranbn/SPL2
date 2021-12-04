@@ -12,15 +12,21 @@ import java.util.Queue;
 public class MessageBusImpl implements MessageBus {
 	private HashMap<String, Queue<Event>> eventsStudent;
 	private HashMap<String, Queue<Event>> eventsGPU;
+	//broadcasts
 	private List<MicroService> broadcastTimer;
+	private List<MicroService> PublishConferenceList;
+	//events
+	int gpuUseCounter;
 	private List<MicroService> trainModelList;
 	private List<MicroService> testModelList;
+	int conferenceUseCounter;
 	private List<MicroService> PublishResultsList;
-	private List<MicroService> PublishConferenceList;
+
+
+
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override

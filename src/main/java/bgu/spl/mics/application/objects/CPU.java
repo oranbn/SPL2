@@ -7,14 +7,15 @@ import java.util.Queue;
  * Passive object representing a single CPU.
  * Add all the fields described in the assignment as private fields.
  * Add fields and methods to this class as you see fit (including public methods and constructors).
+ * @INV: ticks >= 0
  */
 public class CPU {
     private int cores;
     private DataBatch dataBatch;
     private Cluster cluster;
-    private int gpuID; //Oran - to track the gpus
-    private int ticks; //Oran - to track the "time" passes
-    private boolean processing; //Oran - if in the middle of processing a batcha
+    private int gpuID;
+    private int ticks; //ticks left
+    private boolean processing;
 
     public CPU(int cores, Cluster cluster) {
         this.cores = cores;
@@ -23,52 +24,64 @@ public class CPU {
         this.processing = false;
     }
     /**
+     * <p>
+     * @param
      * @return return the Data of DataBatch
      * @PRE: none
-     * @POST: @return Data
+     * @POST: none
      */
     public Data getData() {
         return dataBatch.getData();
     }
     /**
+     * <p>
+     * @param
      * @return return the Type of Data
      * @PRE: none
-     * @POST: @return Type
+     * @POST: none
      */
     public Data.Type getType() {
         return getData().getType();
     }
     /**
+     * <p>
+     * @param
      * @return return the boolean value of processing
      * @PRE: none
-     * @POST: @return processing
+     * @POST: none
      */
     public boolean getProcessing() {
         return processing;
     }
 
     /**
+     * <p>
+     * @param
      * @return return the DataBatch of the class
      * @PRE: none
-     * @POST: @return dataBatch
+     * @POST: none
      */
     public DataBatch getDataBatch() {
         return dataBatch;
     }
 
     /**
+     * <p>
+     * @param
      * @return return the int value of the Id of the gpu the cpu's currently working on its databatches
      * @PRE: none
-     * @POST: @return gpuID
+     * @POST: none
      */
     public int getGpuID() {
         return gpuID;
     }
 
     /**
+     * <p>
+     * @param
      * @return return the int value of the ticks needed for a single process
      * @PRE: none
-     * @POST: @return ticks
+     * @POST: none
      */
     public int getTicks() {
         return ticks;
@@ -77,11 +90,10 @@ public class CPU {
     /**
      * Enter a dataBatch from a gpu to a cpu through the cluster
      * <p>
+     * @param
      * @return return a boolean on whether the CPU can start processing or already in a process
      * @PRE: none
-     * @POST: if processing is false, calls the "process" method,
-     *            which sets the CPU with data to process and set processing as true
-     *        if processing is true, does nothing
+     * @POST: none
      */
     //entering a batch to a cpu, which will make it "processing"
     public boolean canProcess(DataBatch dataBatch, int id) {
@@ -95,6 +107,7 @@ public class CPU {
      * An "assist" function that sets the CPU with data to process
      * while setting the ticks amount needed according to the data type
      * <p>
+     * @param
      * @return none
      * @PRE: getGpuID() == null
      *       getDataBatch() == null
@@ -126,13 +139,15 @@ public class CPU {
     /**
      * This function countdown the ticks amount needed for the processing process to end
      * <p>
+     * @param
      * @return none
      * @PRE: none
-     * @POST:   if ticks = 0, none
-     *          else, ticks == @pre(ticks) - 1
-     *          if ticks = 0, getProcessing() == false,
-     *                        cluster takes the processed data batch,
-     *                        and gives the cpu the new unprocessed dataBatch
+     * @POST: none
+     *                if ticks = 0, none
+     *                else, ticks == @pre(ticks) - 1
+     *                if ticks = 0, getProcessing() == false,
+     *                              cluster takes the processed data batch,
+     *                              and gives the cpu the new unprocessed dataBatch               //ORAN ORAN ORAN ORAN ORAN//
      */
     public void tick() {
         if (ticks == 0)

@@ -41,8 +41,8 @@ public class GPUTest {
         assertTrue(gpu.trainModel(model));
         assertFalse(gpu.trainModel(model));
         Model.Status status = Model.Status.Training;
-        assertEquals(gpu.getStatus(), status);
-        assertEquals(gpu.getData(), data);
+        assertEquals(gpu.getModelStatus(), status);
+        assertEquals(gpu.getModelData(), data);
         assertEquals(gpu.getDataBatchAmount(), 10);
     }
 
@@ -50,13 +50,13 @@ public class GPUTest {
     public void testModel() {
         assertTrue(gpu.testModel(model));
         Model.Status tested = Model.Status.Tested;
-        assertEquals(gpu.getStatus(), tested);
+        assertEquals(gpu.getModelStatus(), tested);
     }
 
     @Test
     public void tick() {
         gpu.trainModel(model);
-        gpu.addProcessedDataBatches(new DataBatch(data, 0));
+        gpu.addProcessedDataBatch(new DataBatch(data, 0));
         assertEquals(gpu.getCurrentTicks(), 2);
         assertEquals(gpu.getDataBatchAmount(), 10);
         assertEquals(gpu.getProcessedDataBatch().size(), 1);
@@ -74,10 +74,10 @@ public class GPUTest {
     public void addProcessedDataBatches() {
         assertEquals(gpu.getProcessedDataBatch().size(), 0);
         for(int i = 0; i < 16; i++) {
-            assertTrue(gpu.addProcessedDataBatches(new DataBatch(data, 0)));
+            assertTrue(gpu.addProcessedDataBatch(new DataBatch(data, 0)));
             assertEquals(gpu.getProcessedDataBatch().size(), i+1);
         }
-        assertFalse(gpu.addProcessedDataBatches(new DataBatch(data, 0)));
+        assertFalse(gpu.addProcessedDataBatch(new DataBatch(data, 0)));
         assertEquals(gpu.getProcessedDataBatch().size(), 16);
     }
 
@@ -86,8 +86,8 @@ public class GPUTest {
         gpu.trainModel(model);
         Model.Status training = Model.Status.Training;
         Model.Status trained = Model.Status.Trained;
-        assertEquals(gpu.getStatus(), training);
-        gpu.finishProcess();
-        assertEquals(gpu.getStatus(), trained);
+        assertEquals(gpu.getModelStatus(), training);
+        gpu.finishTrain();
+        assertEquals(gpu.getModelStatus(), trained);
     }
 }

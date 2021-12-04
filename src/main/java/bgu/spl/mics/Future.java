@@ -9,12 +9,11 @@ import java.util.concurrent.TimeUnit;
  * 
  * Only private methods may be added to this class.
  * No public constructor is allowed except for the empty constructor.
+ *@INV: none
  */
 public class Future<T> {
-	/**
-	 *@INV: none
-	 */
 	T result;
+
 	/**
 	 * This should be the the only public constructor in this class.
 	 */
@@ -27,10 +26,10 @@ public class Future<T> {
      * retrieves the result the Future object holds if it has been resolved.
      * This is a blocking method! It waits for the computation in case it has
      * not been completed.
-     * <p>
+	 * <p>
      * @return return the result of type T if it is available, if not wait until it is available.
      * @PRE: none
-	 * @POST: @return result
+	 * @POST: none
      */
 	public T get() {
 		//TODO: implement this.
@@ -40,6 +39,9 @@ public class Future<T> {
 	
 	/**
      * Resolves the result of this Future object.
+	 * <p>
+	 * @param
+	 * @return none
 	 * @PRE: result == null
 	 * @POST: result != null
      */
@@ -50,6 +52,7 @@ public class Future<T> {
 	}
 	
 	/**
+	 * <p>
      * @return true if this object has been resolved, false otherwise
 	 * @PRE: none
 	 * @POST: @return result!=null
