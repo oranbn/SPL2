@@ -2,7 +2,7 @@ package bgu.spl.mics.application.objects;
 
 import bgu.spl.mics.Event;
 
-    public class TestModel implements Event<Model> {
+public class TestModel implements Event<Model> {
     private Model m;
 
     public TestModel(Model m)
@@ -13,4 +13,5 @@ import bgu.spl.mics.Event;
     {
         return m;
     }
+    public Student getStudent(){return getModel().getStudent();}
 }

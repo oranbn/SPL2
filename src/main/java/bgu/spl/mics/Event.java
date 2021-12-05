@@ -1,4 +1,6 @@
 package bgu.spl.mics;
+import bgu.spl.mics.application.objects.Model;
+import bgu.spl.mics.application.objects.Student;
 
 /**
  * A "Marker" interface extending {@link Message}. A micro-service that sends an
@@ -8,5 +10,11 @@ package bgu.spl.mics;
  * Round-Robin fashion.
  */
 public interface Event<T> extends Message {
-
+    /**
+     * @return the mode; which the event is built around
+     * @PRE: none
+     * @POST: none
+     */
+    Model getModel();
+    Student getStudent();
 }

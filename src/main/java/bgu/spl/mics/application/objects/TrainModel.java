@@ -13,4 +13,5 @@ public class TrainModel implements Event<Model> {
     {
         return m;
     }
+    public Student getStudent(){return getModel().getStudent();}
 }

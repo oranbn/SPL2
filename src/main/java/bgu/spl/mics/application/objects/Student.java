@@ -1,4 +1,7 @@
 package bgu.spl.mics.application.objects;
+import bgu.spl.mics.Event;
+import bgu.spl.mics.Future;
+import bgu.spl.mics.Message;
 
 /**
  * Passive object representing single student.
@@ -14,9 +17,10 @@ public class Student {
         MSc, PhD
     }
 
-    private String name;
-    private String department;
-    private Degree status;
+    private final String name;
+    private final String department;
+    private final Degree status;
+    private Future future;
     private int publications;
     private int papersRead;
 
@@ -29,5 +33,24 @@ public class Student {
     }
     public Degree getDegree() {
         return status;
+    }
+    public Future getFuture() { return future; }
+    public int getPublications() {
+        return publications;
+    }
+
+    public void setPublications(int publications) {
+        this.publications = publications;
+    }
+
+    public int getPapersRead() {
+        return papersRead;
+    }
+
+    public void setPapersRead(int papersRead) {
+        this.papersRead = papersRead;
+    }
+    public void setFuture(Future future) {
+        this.future = future;
     }
 }

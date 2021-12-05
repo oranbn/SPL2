@@ -92,7 +92,8 @@ public class FutureTest {
         {
             e.printStackTrace();
         }
-        assertEquals(f.get(timeout,unit), result);
         t1.interrupt();
+        assertEquals(f.get(timeout,unit), result);                                               ///ORAN ORAN ORAN ORAN ORAN ORAN ORAN//
+
     }
 }
