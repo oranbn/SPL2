@@ -42,6 +42,12 @@ public class MessageBusImpl implements MessageBus {
 	private final Iterator<MicroService> testModel;
 	private final Iterator<MicroService> publishResults;
 
+	public boolean isMicroServiceRegistered(MicroService m){return registerList.contains(m);}
+	public <T> boolean isMicroServiceSubscribedEvent(MicroService m, Class<? extends Event<T>> type){ return eventsHashMap.get(type).contains(m);}
+	public boolean isMicroServiceSubscribedBroadcast(MicroService m, Class<? extends Broadcast> type){ return broadcastHashMap.get(type).contains(m);}
+	public boolean isBroadcastEnlistedToMicroService(MicroService m, Broadcast b){ return microServiceBroadCasts.get(m).contains(b); }
+	public boolean isEventEnlistedToMicroService(MicroService m, Event e){ return microServiceEvents.get(m).contains(e); }
+
 
 	@Override
 	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
@@ -78,7 +84,7 @@ public class MessageBusImpl implements MessageBus {
 			for(MicroService m :broadcastHashMap.get(PublishConference.class))
 				microServiceBroadCasts.get(m).add(b);
 		}
-		notifyAll();
+		//notifyAll();
 	}
 
 
@@ -92,7 +98,7 @@ public class MessageBusImpl implements MessageBus {
 			microServiceEvents.get(testModel.next()).add(e);
 		if(e.getClass()==PublishResults.class)
 			microServiceEvents.get(publishResults.next()).add(e);
-		notifyAll();
+		//notifyAll();
 		return future;
 	}
 

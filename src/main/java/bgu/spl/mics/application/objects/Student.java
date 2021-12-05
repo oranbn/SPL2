@@ -13,7 +13,7 @@ public class Student {
     /**
      * Enum representing the Degree the student is studying for.
      */
-    enum Degree {
+    public enum Degree {
         MSc, PhD
     }
 

@@ -22,7 +22,7 @@ public class GPUTest {
     public void setUp() throws Exception {
         type = GPU.Type.RTX2080;
         cluster = Cluster.getInstance();
-        id = 1;
+        id = 0;
         gpu = new GPU(type,cluster,id);
         data = new Data(dataType, 0, 10000);
         degree = Student.Degree.MSc;
@@ -30,6 +30,8 @@ public class GPUTest {
         modelStatus = Model.Status.PreTrained;
         results = Model.Results.None;
         model = new Model("model1", data, student,modelStatus, results);
+        cluster.addGPU(gpu);
+        cluster.getProcessedDataBatchMap().get(0).add(new DataBatch(data, 0));
     }
 
     @After
@@ -49,8 +51,6 @@ public class GPUTest {
     @Test
     public void testModel() {
         assertTrue(gpu.testModel(model));
-        Model.Status tested = Model.Status.Tested;
-        assertEquals(gpu.getModelStatus(), tested);
     }
 
     @Test
@@ -85,9 +85,6 @@ public class GPUTest {
     public void finishProcess() {
         gpu.trainModel(model);
         Model.Status training = Model.Status.Training;
-        Model.Status trained = Model.Status.Trained;
         assertEquals(gpu.getModelStatus(), training);
-        gpu.finishTrain();
-        assertEquals(gpu.getModelStatus(), trained);
     }
 }

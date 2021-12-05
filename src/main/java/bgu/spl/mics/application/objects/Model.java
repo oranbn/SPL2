@@ -9,13 +9,13 @@ public class Model {
     /**
      * Enum representing the Data Status.
      */
-    enum Status {
+    public enum Status {
         PreTrained, Training, Trained, Tested;
     }
     /**
      * Enum representing the Data Results.
      */
-    enum Results {
+    public enum Results {
         None, Good, Bad;
     }
 

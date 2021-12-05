@@ -54,6 +54,7 @@ public class Cluster {
 	public void getNextDataBatches(int gpuID) {
 		processedDataBatch(processedDataBatchMap.get(gpuID).remove(0), gpuID);
 	}
+	public HashMap<Integer, List<DataBatch>> getProcessedDataBatchMap(){return processedDataBatchMap;}
 	//GPU to CPU
 	public void process(List<DataBatch> unProcessedDataBatch, int gpuID) {
 		for(CPU cpu : CPUS)

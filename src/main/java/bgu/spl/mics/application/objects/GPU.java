@@ -198,7 +198,6 @@ public class GPU {
             dataBatchAmount++;
         }
         cluster.process(unProcessedDataBatch, id);
-        model = null;                                                            //(is it okay?)   //ORAN ORAN ORAN ORAN ORAN ORAN//
     }
 
     /**
