@@ -40,7 +40,7 @@ public class Future<T> {
 	/**
      * Resolves the result of this Future object.
 	 * <p>
-	 * @param
+	 * @param result the result that needed to be resolved in the future object
 	 * @return none
 	 * @PRE: result == null
 	 * @POST: result != null

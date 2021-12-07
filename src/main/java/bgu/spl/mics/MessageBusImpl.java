@@ -22,7 +22,7 @@ public class MessageBusImpl implements MessageBus {
 		eventsHashMap = new HashMap<>();
 		broadcastHashMap = new HashMap<>();
 		microServiceEvents = new HashMap<>();
-		microServiceBroadCasts = new HashMap<>();
+		microServiceBroadcasts = new HashMap<>();
 		registerList = new ArrayList<>();
 		eventsHashMap.put(TrainModel.class, new ArrayList<>());
 		eventsHashMap.put(TestModel.class, new ArrayList<>());
@@ -36,7 +36,7 @@ public class MessageBusImpl implements MessageBus {
 	private final HashMap<Class<? extends Event<?>>, List<MicroService>> eventsHashMap;
 	private final HashMap<Class<? extends Broadcast>, List<MicroService>> broadcastHashMap;
 	private final HashMap<MicroService, List<Event<?>>> microServiceEvents;
-	private final HashMap<MicroService, List<Broadcast>> microServiceBroadCasts;
+	private final HashMap<MicroService, List<Broadcast>> microServiceBroadcasts;
 	private final List<MicroService> registerList;
 	private final Iterator<MicroService> trainModel;
 	private final Iterator<MicroService> testModel;
@@ -45,7 +45,7 @@ public class MessageBusImpl implements MessageBus {
 	public boolean isMicroServiceRegistered(MicroService m){return registerList.contains(m);}
 	public <T> boolean isMicroServiceSubscribedEvent(MicroService m, Class<? extends Event<T>> type){ return eventsHashMap.get(type).contains(m);}
 	public boolean isMicroServiceSubscribedBroadcast(MicroService m, Class<? extends Broadcast> type){ return broadcastHashMap.get(type).contains(m);}
-	public boolean isBroadcastEnlistedToMicroService(MicroService m, Broadcast b){ return microServiceBroadCasts.get(m).contains(b); }
+	public boolean isBroadcastEnlistedToMicroService(MicroService m, Broadcast b){ return microServiceBroadcasts.get(m).contains(b); }
 	public boolean isEventEnlistedToMicroService(MicroService m, Event e){ return microServiceEvents.get(m).contains(e); }
 
 
@@ -64,7 +64,6 @@ public class MessageBusImpl implements MessageBus {
 			if(!broadcastHashMap.get(type).contains(m))
 				broadcastHashMap.get(type).add(m);
 	}
-
 	@Override
 	public <T> void complete(Event<T> e, T result) {
 		// TODO Auto-generated method stub
@@ -77,12 +76,12 @@ public class MessageBusImpl implements MessageBus {
 		if(b.getClass()==Tick.class)
 		{
 			for(MicroService m :broadcastHashMap.get(Tick.class))
-				microServiceBroadCasts.get(m).add(b);
+				microServiceBroadcasts.get(m).add(b);
 		}
 		if(b.getClass()==PublishConference.class)
 		{
 			for(MicroService m :broadcastHashMap.get(PublishConference.class))
-				microServiceBroadCasts.get(m).add(b);
+				microServiceBroadcasts.get(m).add(b);
 		}
 		//notifyAll();
 	}
@@ -108,7 +107,7 @@ public class MessageBusImpl implements MessageBus {
 		if(!registerList.contains(m)){
 			registerList.add(m);
 			microServiceEvents.put(m, new ArrayList<Event<?>>());
-			microServiceBroadCasts.put(m, new ArrayList<Broadcast>());
+			microServiceBroadcasts.put(m, new ArrayList<Broadcast>());
 		}
 	}
 
@@ -117,16 +116,16 @@ public class MessageBusImpl implements MessageBus {
 		// TODO Auto-generated method stub
 		registerList.remove(m);
 		microServiceEvents.remove(m);
-		microServiceBroadCasts.remove(m);
+		microServiceBroadcasts.remove(m);
 	}
 
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		// TODO Auto-generated method stub
-		while(microServiceEvents.get(m).size()==0 && microServiceBroadCasts.get(m).size()==0)
+		while(microServiceEvents.get(m).size()==0 && microServiceBroadcasts.get(m).size()==0)
 			wait();
 		if(microServiceEvents.get(m).size()>0)
 			return microServiceEvents.get(m).remove(0);
-		return microServiceBroadCasts.get(m).remove(0);
+		return microServiceBroadcasts.get(m).remove(0);
 	}
 }

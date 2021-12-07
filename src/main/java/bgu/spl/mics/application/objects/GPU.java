@@ -85,7 +85,6 @@ public class GPU {
 
     /**
      * <p>
-     * @param
      * @return returns the ID of the gpu
      * @PRE: none
      * @POST: none
@@ -96,7 +95,6 @@ public class GPU {
 
     /**
      * <p>
-     * @param
      * @return returns the amount of DataBatches in the gpu
      * @PRE: none
      * @POST: none
@@ -105,7 +103,6 @@ public class GPU {
 
     /**
      * <p>
-     * @param
      * @return returns the ticks left currently to finish a process
      * @PRE: none
      * @POST: none
@@ -114,8 +111,7 @@ public class GPU {
 
     /**
      * <p>
-     * @param
-     * @return returns the queue containing all dataBatches which were arlready processed by the CPU
+     * @return returns the queue containing all dataBatches which were already processed by the CPU
      * @PRE: none
      * @POST: none
      */
@@ -123,7 +119,6 @@ public class GPU {
 
     /**
      * <p>
-     * @param
      * @return returns the Status(trained\tested\...) of the model
      * @PRE: none
      * @POST: none
@@ -132,7 +127,6 @@ public class GPU {
 
     /**
      * <p>
-     * @param
      * @return returns the Results(Good\Bad) of the model
      * @PRE: none
      * @POST: none
@@ -141,7 +135,6 @@ public class GPU {
 
     /**
      * <p>
-     * @param
      * @return returns the Student that the model is his
      * @PRE: none
      * @POST: none
@@ -161,7 +154,7 @@ public class GPU {
      * This function receives a Model and split its data to batches,
      * then sends it to the cluster to start processing.
      * <p>
-     * @param
+     * @param m the model that start the training process
      * @return returns a boolean on whether the gpu can start the model's training process or already works on another model
      * @PRE: none
      * @POST: none
@@ -185,7 +178,7 @@ public class GPU {
      * @PRE: getModel() != null
      *       getModelStatus() == Training
      *
-     * @POST: getDataBatchAmount() > 0 (can we check empty data models?) //ORAN ORAN ORAN ORAN ORAN ORAN//
+     * @POST: getDataBatchAmount() > 0
      */
     private void splitDataToBatches() {
         Data data = getModelData();
@@ -204,7 +197,7 @@ public class GPU {
      * This function receives a Model and randomly choosing whether the model results are good or bad.
      * Then changes the model's status to tested and clears the gpu to be able to receive another model
      * <p>
-     * @param
+     * @param m the model that start the testing process
      * @return returns a boolean on whether the gpu can start train the model or already works on another model
      * @PRE: none
      * @POST: none
@@ -221,13 +214,12 @@ public class GPU {
      * An "assist" function that is called from the testModel method, generates a natural random number out of 10
      * and sets the model result by predetermined chance, and sets the current model as tested
      * <p>
-     * @param
      * @return none
      * @PRE: getModel() == null
      *       getModelResults() == null
-     *       getModelStatus() == Trained (if it's getting tested does it have to be trained?) //ORAN ORAN ORAN ORAN ORAN ORAN//
+     *       getModelStatus() == Trained
      *
-     * @POST: getModel() == null (is it null at the end or what?) //ORAN ORAN ORAN ORAN ORAN ORAN//
+     * @POST: getModel() == null
      *        getModelResults() != null
      *        getModelStatus() == Tested
      */
@@ -257,7 +249,6 @@ public class GPU {
     /**
      * This function countdown the ticks amount needed to finish processing the dataBatch
      * <p>
-     * @param
      * @return true if enough ticks have been made to finish training a processed dataBatch, false otherwise
      * @PRE: none
      * @POST: none
@@ -285,7 +276,6 @@ public class GPU {
      * This function is called if enough ticks have been made to finish training the model.
      * It sets the model status to trained and frees the GPU to handle a new event
      * <p>
-     * @param
      * @return none
      * @PRE: getStatus() == Training
      *       getModel() != null
@@ -303,7 +293,7 @@ public class GPU {
      * This function tries to add a processed data batch to the GPU processed Queue, if the list limit
      * have been reached, return false.
      * <p>
-     * @param
+     * @param dataBatch!=null the databatch who have been processed in cpu and will be processed in gpu
      * @return none
      * @PRE: none
      * @POST: none

@@ -20,8 +20,9 @@ public interface MessageBus {
      * @param type The type to subscribe to,
      * @param m    The subscribing micro-service.
      * @return none
-     * @PRE:
-     * @POST:
+     * @PRE: none
+     * @POST: registerList != null
+     *        eventsHashMap != null
      */
     <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m);
 
@@ -31,8 +32,9 @@ public interface MessageBus {
      * @param type 	The type to subscribe to.
      * @param m    	The subscribing micro-service.
      * @return none
-     * @PRE:
-     * @POST:
+     * @PRE: none
+     * @POST: registerList != null
+     *        broadcastsHashMap != null
      */
     void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m);
 
@@ -46,8 +48,8 @@ public interface MessageBus {
      * @param e      The completed event.
      * @param result The resolved result of the completed event.
      * @return none
-     * @PRE:
-     * @POST:
+     * @PRE: none
+     * @POST: e.getStudent().getFuture().getResult() != null
      */
     <T> void complete(Event<T> e, T result);
 
@@ -57,8 +59,8 @@ public interface MessageBus {
      * <p>
      * @param b 	The message to added to the queues.
      * @return none
-     * @PRE:
-     * @POST:
+     * @PRE: none
+     * @POST: isMicroServiceBroadcastsEmpty() == false
      */
     void sendBroadcast(Broadcast b);
 
@@ -71,8 +73,8 @@ public interface MessageBus {
      * @param e     	The event to add to the queue.
      * @return {@link Future<T>} object to be resolved once the processing is complete,
      * 	       null in case no micro-service has subscribed to {@code e.getClass()}.
-     * @PRE:
-     * @POST:
+     * @PRE: none
+     * @POST: isMicroServiceEventsEmpty() == false
      */
     <T> Future<T> sendEvent(Event<T> e);
 
@@ -81,8 +83,10 @@ public interface MessageBus {
      * <p>
      * @param m the micro-service to create a queue for.
      * @return none
-     * @PRE:
-     * @POST:
+     * @PRE: none
+     * @POST: isRegisteredEmpty() == false
+     *        isMicroServiceEventsEmpty() == false
+     *        isMicroServiceBroadcastsEmpty() == false
      */
     void register(MicroService m);
 
@@ -94,8 +98,8 @@ public interface MessageBus {
      * <p>
      * @param m the micro-service to unregister.
      * @return none
-     * @PRE:
-     * @POST:
+     * @PRE: none
+     * @POST: none
      */
     void unregister(MicroService m);
 
@@ -113,8 +117,8 @@ public interface MessageBus {
      * @return The next message in the {@code m}'s queue (blocking).
      * @throws InterruptedException if interrupted while waiting for a message
      *                              to became available.
-     * @PRE:
-     * @POST:
+     * @PRE: none
+     * @POST: none
      */
     Message awaitMessage(MicroService m) throws InterruptedException;
     

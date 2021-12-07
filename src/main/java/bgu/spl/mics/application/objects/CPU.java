@@ -25,7 +25,6 @@ public class CPU {
     }
     /**
      * <p>
-     * @param
      * @return return the Data of DataBatch
      * @PRE: none
      * @POST: none
@@ -35,7 +34,6 @@ public class CPU {
     }
     /**
      * <p>
-     * @param
      * @return return the Type of Data
      * @PRE: none
      * @POST: none
@@ -45,7 +43,6 @@ public class CPU {
     }
     /**
      * <p>
-     * @param
      * @return return the boolean value of processing
      * @PRE: none
      * @POST: none
@@ -56,7 +53,6 @@ public class CPU {
 
     /**
      * <p>
-     * @param
      * @return return the DataBatch of the class
      * @PRE: none
      * @POST: none
@@ -67,7 +63,6 @@ public class CPU {
 
     /**
      * <p>
-     * @param
      * @return return the int value of the Id of the gpu the cpu's currently working on its databatches
      * @PRE: none
      * @POST: none
@@ -78,7 +73,6 @@ public class CPU {
 
     /**
      * <p>
-     * @param
      * @return return the int value of the ticks needed for a single process
      * @PRE: none
      * @POST: none
@@ -90,7 +84,8 @@ public class CPU {
     /**
      * Enter a dataBatch from a gpu to a cpu through the cluster
      * <p>
-     * @param
+     * @param dataBatch need to be processed by the cpu
+     * @param id the id of the gpu who sent the dataBatch
      * @return return a boolean on whether the CPU can start processing or already in a process
      * @PRE: none
      * @POST: none
@@ -107,7 +102,8 @@ public class CPU {
      * An "assist" function that sets the CPU with data to process
      * while setting the ticks amount needed according to the data type
      * <p>
-     * @param
+     * @param dataBatch need to be processed by the cpu
+     * @param id the id of the gpu who sent the dataBatch
      * @return none
      * @PRE: getGpuID() == null
      *       getDataBatch() == null
@@ -139,15 +135,9 @@ public class CPU {
     /**
      * This function countdown the ticks amount needed for the processing process to end
      * <p>
-     * @param
      * @return none
      * @PRE: none
      * @POST: none
-     *                if ticks = 0, none
-     *                else, ticks == @pre(ticks) - 1
-     *                if ticks = 0, getProcessing() == false,
-     *                              cluster takes the processed data batch,
-     *                              and gives the cpu the new unprocessed dataBatch               //ORAN ORAN ORAN ORAN ORAN//
      */
     public void tick() {
         if (ticks == 0)
