@@ -24,16 +24,26 @@ public class Cluster {
 		return ClusterHolder.instance;
 	}
 
-	private List<GPU> GPUS;
-	private List<CPU> CPUS;
-	HashMap<Integer, List<DataBatch>> unprocessedDataBatchMap;
+	private final List<GPU> GPUS;
+	private final List<CPU> CPUS;
+	int roundRobin3090;
+	int roundRobin2080;
+	int roundRobin1080;
+	HashMap<Integer, List<DataBatch>> unprocessedDataBatchMapGPU_RTX3090;
+	HashMap<Integer, List<DataBatch>> unprocessedDataBatchMapGPU_RTX2080;
+	HashMap<Integer, List<DataBatch>> unprocessedDataBatchMapGPU_GTX1080;
 	HashMap<Integer, List<DataBatch>> processedDataBatchMap;
 	//private Statistics statistics;
 	private Cluster(){
 		GPUS = new ArrayList<GPU>();
 		CPUS = new ArrayList<CPU>();
-		unprocessedDataBatchMap = new HashMap<>();
+		unprocessedDataBatchMapGPU_RTX3090 = new HashMap<>();
+		unprocessedDataBatchMapGPU_RTX2080 = new HashMap<>();
+		unprocessedDataBatchMapGPU_GTX1080 = new HashMap<>();
 		processedDataBatchMap = new HashMap();
+		roundRobin3090 = 0;
+		roundRobin2080 = 0;
+		roundRobin1080 = 0;
 	}
 
 	public void addGPU(GPU gpu)
@@ -56,14 +66,60 @@ public class Cluster {
 	}
 	public HashMap<Integer, List<DataBatch>> getProcessedDataBatchMap(){return processedDataBatchMap;}
 	//GPU to CPU
-	public void process(List<DataBatch> unProcessedDataBatch, int gpuID) {
+	public synchronized void process(List<DataBatch> unProcessedDataBatch, int gpuID, GPU.Type type) {
 		for(CPU cpu : CPUS)
 			if(cpu.canProcess(unProcessedDataBatch.get(0), gpuID))
 				unProcessedDataBatch.remove(0);
-		unprocessedDataBatchMap.put(gpuID, unProcessedDataBatch);
+		if(type == GPU.Type.RTX3090)
+			unprocessedDataBatchMapGPU_RTX3090.put(gpuID, unProcessedDataBatch);
+		if(type == GPU.Type.RTX2080)
+			unprocessedDataBatchMapGPU_RTX2080.put(gpuID, unProcessedDataBatch);
+		if(type == GPU.Type.GTX1080)
+			unprocessedDataBatchMapGPU_GTX1080.put(gpuID, unProcessedDataBatch);
 	}
-	public void getNextDataBatch() {
-		// priority implements ...
+
+	public synchronized void getNextDataBatch(CPU cpu) {
+		while(true) {
+			if (roundRobin3090 < unprocessedDataBatchMapGPU_RTX3090.size()) {
+				int key = (int) unprocessedDataBatchMapGPU_RTX3090.keySet().toArray()[roundRobin3090];
+				if (unprocessedDataBatchMapGPU_RTX3090.get(key).size() > 0) {
+					cpu.canProcess(unprocessedDataBatchMapGPU_RTX3090.get(key).get(0), key);
+					roundRobin3090++;
+					break;
+				}
+				else
+					roundRobin3090++;
+			}
+			else if(roundRobin2080 < unprocessedDataBatchMapGPU_RTX2080.size()) {
+				int key = (int) unprocessedDataBatchMapGPU_RTX2080.keySet().toArray()[roundRobin2080];
+				if (unprocessedDataBatchMapGPU_RTX2080.get(key).size() > 0) {
+					cpu.canProcess(unprocessedDataBatchMapGPU_RTX2080.get(key).get(0), key);
+					roundRobin2080++;
+					roundRobin3090 = 0;
+					break;
+				}
+				else
+					roundRobin2080++;
+			}
+			else if(roundRobin1080 < unprocessedDataBatchMapGPU_GTX1080.size()) {
+				int key = (int) unprocessedDataBatchMapGPU_GTX1080.keySet().toArray()[roundRobin1080];
+				if (unprocessedDataBatchMapGPU_GTX1080.get(key).size() > 0) {
+					cpu.canProcess(unprocessedDataBatchMapGPU_GTX1080.get(key).get(0), key);
+					roundRobin1080++;
+					roundRobin3090 = 0;
+					roundRobin2080 = 0;
+					break;
+				}
+				else
+					roundRobin1080++;
+			}
+			else
+			{
+				roundRobin2080=0;
+				roundRobin3090=0;
+				roundRobin1080=0;
+			}
+		}
 	}
 
 

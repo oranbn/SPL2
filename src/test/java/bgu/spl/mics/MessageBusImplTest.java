@@ -14,7 +14,7 @@ public class MessageBusImplTest {
     private MessageBusImpl messageBus;
     CPUService cpuS1;
     GPUService gpuS1;
-    TrainModel trainModel;
+    TrainModelEvent trainModel;
     Model model;
     Data data;
     Data.Type dataType = Data.Type.Images;
@@ -22,20 +22,20 @@ public class MessageBusImplTest {
     Student.Degree degree;
     Model.Status modelStatus;
     Model.Results results;
-    Tick tick;
+    TickBroadcast tick;
     @Before
     public void setUp() throws Exception {
         messageBus = MessageBusImpl.getInstance();
-        cpuS1 = new CPUService("CPU1");
-        gpuS1 = new GPUService("GPU1");
+        cpuS1 = new CPUService("CPU1", new CPU(32, Cluster.getInstance()));
+        gpuS1 = new GPUService("GPU1", new GPU(GPU.Type.RTX3090, Cluster.getInstance(),0));
         data = new Data(dataType, 0, 10000);
         degree = Student.Degree.MSc;
         student = new Student("Moshe", "SE", degree);
         modelStatus = Model.Status.PreTrained;
         results = Model.Results.None;
         model = new Model("model1", data, student,modelStatus, results);
-        trainModel = new TrainModel(model);
-        tick = new Tick();
+        trainModel = new TrainModelEvent(model);
+        tick = new TickBroadcast(50);
     }
 
     @After
@@ -44,31 +44,30 @@ public class MessageBusImplTest {
 
     @Test
     public void subscribeEvent() {
-        messageBus.subscribeEvent(TrainModel.class, cpuS1);
-        assertFalse(messageBus.isMicroServiceSubscribedEvent(cpuS1, TrainModel.class));
+        messageBus.subscribeEvent(TrainModelEvent.class, cpuS1);
+        assertFalse(messageBus.isMicroServiceSubscribedEvent(cpuS1, TrainModelEvent.class));
         messageBus.register(cpuS1);
-        assertFalse(messageBus.isMicroServiceSubscribedEvent(cpuS1, TrainModel.class));
-        messageBus.subscribeEvent(TrainModel.class, cpuS1);
-        assertTrue(messageBus.isMicroServiceSubscribedEvent(cpuS1, TrainModel.class));
+        assertFalse(messageBus.isMicroServiceSubscribedEvent(cpuS1, TrainModelEvent.class));
+        messageBus.subscribeEvent(TrainModelEvent.class, cpuS1);
+        assertTrue(messageBus.isMicroServiceSubscribedEvent(cpuS1, TrainModelEvent.class));
     }
 
     @Test
     public void subscribeBroadcast() {
-        messageBus.subscribeBroadcast(Tick.class, cpuS1);
-        assertFalse(messageBus.isMicroServiceSubscribedBroadcast(cpuS1, Tick.class));
+        messageBus.subscribeBroadcast(TickBroadcast.class, cpuS1);
+        assertFalse(messageBus.isMicroServiceSubscribedBroadcast(cpuS1, TickBroadcast.class));
         messageBus.register(cpuS1);
-        assertFalse(messageBus.isMicroServiceSubscribedBroadcast(cpuS1, Tick.class));
-        messageBus.subscribeBroadcast(Tick.class, cpuS1);
-        assertTrue(messageBus.isMicroServiceSubscribedBroadcast(cpuS1, Tick.class));
+        assertFalse(messageBus.isMicroServiceSubscribedBroadcast(cpuS1, TickBroadcast.class));
+        messageBus.subscribeBroadcast(TickBroadcast.class, cpuS1);
+        assertTrue(messageBus.isMicroServiceSubscribedBroadcast(cpuS1, TickBroadcast.class));
     }
 
     @Test
     public void complete() {
-        messageBus.register(cpuS1);
         messageBus.register(gpuS1);
-        messageBus.subscribeEvent(TrainModel.class, gpuS1);
+        messageBus.subscribeEvent(TrainModelEvent.class, gpuS1);
         Future<Model> f = messageBus.sendEvent(trainModel);
-        student.setFuture(f);
+        trainModel.setFuture(f);
         assertFalse(f.isDone());
         messageBus.complete(trainModel, model);
         assertTrue(f.isDone());
@@ -77,7 +76,7 @@ public class MessageBusImplTest {
     @Test
     public void sendBroadcast() {
         messageBus.register(cpuS1);
-        messageBus.subscribeBroadcast(Tick.class, cpuS1);
+        messageBus.subscribeBroadcast(TickBroadcast.class, cpuS1);
         assertFalse(messageBus.isBroadcastEnlistedToMicroService(cpuS1, tick));
         messageBus.sendBroadcast(tick);
         assertTrue(messageBus.isBroadcastEnlistedToMicroService(cpuS1, tick));
@@ -86,7 +85,7 @@ public class MessageBusImplTest {
     @Test
     public void sendEvent() {
         messageBus.register(cpuS1);
-        messageBus.subscribeEvent(TrainModel.class, cpuS1);
+        messageBus.subscribeEvent(TrainModelEvent.class, cpuS1);
         assertFalse(messageBus.isEventEnlistedToMicroService(cpuS1, trainModel));
         messageBus.sendEvent(trainModel);
         assertTrue(messageBus.isEventEnlistedToMicroService(cpuS1, trainModel));
@@ -110,7 +109,7 @@ public class MessageBusImplTest {
     @Test
     public void awaitMessage() {
         messageBus.register(cpuS1);
-        messageBus.subscribeBroadcast(Tick.class, cpuS1);
+        messageBus.subscribeBroadcast(TickBroadcast.class, cpuS1);
         Thread t = new Thread(()->
         {
             try{

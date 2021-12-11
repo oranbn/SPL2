@@ -1,8 +1,6 @@
 package bgu.spl.mics;
 
 import bgu.spl.mics.application.objects.*;
-import bgu.spl.mics.application.services.GPUService;
-import bgu.spl.mics.application.services.StudentService;
 
 import java.util.*;
 
@@ -24,23 +22,23 @@ public class MessageBusImpl implements MessageBus {
 		microServiceEvents = new HashMap<>();
 		microServiceBroadcasts = new HashMap<>();
 		registerList = new ArrayList<>();
-		eventsHashMap.put(TrainModel.class, new ArrayList<>());
-		eventsHashMap.put(TestModel.class, new ArrayList<>());
-		eventsHashMap.put(PublishResults.class, new ArrayList<>());
-		broadcastHashMap.put(Tick.class, new ArrayList<>());
-		broadcastHashMap.put(PublishConference.class, new ArrayList<>());
-		trainModel = new RoundRobinImpl<MicroService>(eventsHashMap.get(TrainModel.class)).iterator();
-		testModel = new RoundRobinImpl<MicroService>(eventsHashMap.get(TestModel.class)).iterator();
-		publishResults = new RoundRobinImpl<MicroService>(eventsHashMap.get(PublishResults.class)).iterator();
+		eventsHashMap.put(TrainModelEvent.class, new ArrayList<>());
+		eventsHashMap.put(TestModelEvent.class, new ArrayList<>());
+		eventsHashMap.put(PublishResultsEvent.class, new ArrayList<>());
+		broadcastHashMap.put(TickBroadcast.class, new ArrayList<>());
+		broadcastHashMap.put(PublishConfrenceBroadcast.class, new ArrayList<>());
+		trainModelIterator = new RoundRobinImpl<>(eventsHashMap.get(TrainModelEvent.class)).iterator();
+		testModelIterator = new RoundRobinImpl<>(eventsHashMap.get(TestModelEvent.class)).iterator();
+		publishResultsIterator = new RoundRobinImpl<>(eventsHashMap.get(PublishResultsEvent.class)).iterator();
 	}
 	private final HashMap<Class<? extends Event<?>>, List<MicroService>> eventsHashMap;
 	private final HashMap<Class<? extends Broadcast>, List<MicroService>> broadcastHashMap;
 	private final HashMap<MicroService, List<Event<?>>> microServiceEvents;
 	private final HashMap<MicroService, List<Broadcast>> microServiceBroadcasts;
 	private final List<MicroService> registerList;
-	private final Iterator<MicroService> trainModel;
-	private final Iterator<MicroService> testModel;
-	private final Iterator<MicroService> publishResults;
+	private final Iterator<MicroService> trainModelIterator;
+	private final Iterator<MicroService> testModelIterator;
+	private final Iterator<MicroService> publishResultsIterator;
 
 	public boolean isMicroServiceRegistered(MicroService m){return registerList.contains(m);}
 	public <T> boolean isMicroServiceSubscribedEvent(MicroService m, Class<? extends Event<T>> type){ return eventsHashMap.get(type).contains(m);}
@@ -67,23 +65,27 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public <T> void complete(Event<T> e, T result) {
 		// TODO Auto-generated method stub
-		e.getStudent().getFuture().resolve(result);
+		e.getFuture().resolve(result);
 	}
 
 	@Override
 	public void sendBroadcast(Broadcast b) {
 		// TODO Auto-generated method stub
-		if(b.getClass()==Tick.class)
+		if(b.getClass()== TickBroadcast.class)
 		{
-			for(MicroService m :broadcastHashMap.get(Tick.class))
+			for(MicroService m :broadcastHashMap.get(TickBroadcast.class))
+				if(microServiceEvents.containsKey(m))
 				microServiceBroadcasts.get(m).add(b);
 		}
-		if(b.getClass()==PublishConference.class)
+		if(b.getClass()== PublishConfrenceBroadcast.class)
 		{
-			for(MicroService m :broadcastHashMap.get(PublishConference.class))
+			for(MicroService m :broadcastHashMap.get(PublishConfrenceBroadcast.class))
+				if(microServiceEvents.containsKey(m))
 				microServiceBroadcasts.get(m).add(b);
 		}
-		//notifyAll();
+		synchronized (this) {
+			notifyAll();
+		}
 	}
 
 
@@ -91,13 +93,37 @@ public class MessageBusImpl implements MessageBus {
 	public <T> Future<T> sendEvent(Event<T> e) {
 		// TODO Auto-generated method stub
 		Future<T> future = new Future<>();
-		if(e.getClass()==TrainModel.class)
-			microServiceEvents.get(trainModel.next()).add(e);
-		if(e.getClass()==TestModel.class)
-			microServiceEvents.get(testModel.next()).add(e);
-		if(e.getClass()==PublishResults.class)
-			microServiceEvents.get(publishResults.next()).add(e);
-		//notifyAll();
+		e.setFuture(future);
+		if(e.getClass()== TrainModelEvent.class)
+			while(true)
+			{
+				MicroService m = trainModelIterator.next();
+				if(microServiceEvents.containsKey(m)) {
+					microServiceEvents.get(m).add(e);
+					break;
+				}
+			}
+		if(e.getClass()== TestModelEvent.class)
+			while(true)
+			{
+				MicroService m = testModelIterator.next();
+				if(microServiceEvents.containsKey(m)) {
+					microServiceEvents.get(m).add(e);
+					break;
+				}
+			}
+		if(e.getClass()== PublishResultsEvent.class)
+			while(true)
+			{
+				MicroService m = publishResultsIterator.next();
+				if(microServiceEvents.containsKey(m)) {
+					microServiceEvents.get(m).add(e);
+					break;
+				}
+			}
+		synchronized (this) {
+			notifyAll();
+		}
 		return future;
 	}
 
@@ -122,8 +148,10 @@ public class MessageBusImpl implements MessageBus {
 	@Override
 	public Message awaitMessage(MicroService m) throws InterruptedException {
 		// TODO Auto-generated method stub
-		while(microServiceEvents.get(m).size()==0 && microServiceBroadcasts.get(m).size()==0)
-			wait();
+		synchronized(this) {
+			while(microServiceEvents.get(m).size()==0 && microServiceBroadcasts.get(m).size()==0)
+				wait();
+		}
 		if(microServiceEvents.get(m).size()>0)
 			return microServiceEvents.get(m).remove(0);
 		return microServiceBroadcasts.get(m).remove(0);

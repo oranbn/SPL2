@@ -146,7 +146,7 @@ public class CPU {
         if (ticks == 0) {
             processing = false;
             cluster.processedDataBatch(dataBatch, gpuID);
-            cluster.getNextDataBatch();
+            cluster.getNextDataBatch(this);
         }
     }
 }

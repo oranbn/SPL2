@@ -17,10 +17,21 @@ public class Student {
         MSc, PhD
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public Degree getStatus() {
+        return status;
+    }
+
     private final String name;
     private final String department;
     private final Degree status;
-    private Future future;
     private int publications;
     private int papersRead;
 
@@ -34,7 +45,6 @@ public class Student {
     public Degree getDegree() {
         return status;
     }
-    public Future getFuture() { return future; }
     public int getPublications() {
         return publications;
     }
@@ -49,8 +59,5 @@ public class Student {
 
     public void setPapersRead(int papersRead) {
         this.papersRead = papersRead;
-    }
-    public void setFuture(Future future) {
-        this.future = future;
     }
 }

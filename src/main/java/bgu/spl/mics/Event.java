@@ -16,5 +16,7 @@ public interface Event<T> extends Message {
      * @POST: none
      */
     Model getModel();
+    Future<T> getFuture();
+    void setFuture(Future<T> future);
     Student getStudent();
 }

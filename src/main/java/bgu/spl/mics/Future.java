@@ -33,7 +33,15 @@ public class Future<T> {
      */
 	public T get() {
 		//TODO: implement this.
-		while(result == null) {}
+		synchronized (this) {
+			while (result == null) {
+				try {
+					wait();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		return result;
 	}
 	
@@ -47,8 +55,13 @@ public class Future<T> {
      */
 	public void resolve (T result) {
 		//TODO: implement this.
-		if(result!=null & this.result==null)
+		if(result!=null & this.result==null) {
 			this.result = result;
+			synchronized (this) {
+				notifyAll();
+			}
+
+		}
 	}
 	
 	/**

@@ -17,7 +17,7 @@ public class GPU {
     /**
      * Enum representing the type of the GPU.
      */
-    enum Type {RTX3090, RTX2080, GTX1080}
+    public enum Type {RTX3090, RTX2080, GTX1080}
 
     private Type type;
     private Model model;
@@ -48,7 +48,7 @@ public class GPU {
                 processedDataBatchesLimit = 32;
                 break;
         }
-        currentTicks = ticksNeeded;
+        currentTicks = 0;
         processedDataBatchQueue = new LinkedList<DataBatch>();
     }
 
@@ -164,6 +164,7 @@ public class GPU {
             return false;
         model = m;
         Model.Status status = Model.Status.Training;
+        currentTicks = ticksNeeded;
         model.setStatus(status);
         splitDataToBatches();
         return true;
@@ -190,7 +191,7 @@ public class GPU {
             index += 1000;
             dataBatchAmount++;
         }
-        cluster.process(unProcessedDataBatch, id);
+        cluster.process(unProcessedDataBatch, id, type);
     }
 
     /**
@@ -230,14 +231,14 @@ public class GPU {
         Model.Status tested = Model.Status.Tested;
         if(getModelStudentDegree() == Student.Degree.MSc)
         {
-           if(random == 1)
+           if(random <= 6)
                 model.setResults(good);
            else
                model.setResults(bad);
         }
         else
         {
-            if(random==1 || random==2)
+            if(random<=8)
                 model.setResults(good);
             else
                 model.setResults(bad);
@@ -286,6 +287,7 @@ public class GPU {
         Model.Status status = Model.Status.Trained;
         model.setStatus(status);
         model = null;
+        currentTicks = 0;
         //return true;
     }
 
