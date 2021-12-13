@@ -69,28 +69,26 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public void sendBroadcast(Broadcast b) {
+	public synchronized void sendBroadcast(Broadcast b) {
 		// TODO Auto-generated method stub
 		if(b.getClass()== TickBroadcast.class)
 		{
 			for(MicroService m :broadcastHashMap.get(TickBroadcast.class))
-				if(microServiceEvents.containsKey(m))
+				if(microServiceBroadcasts.containsKey(m))
 				microServiceBroadcasts.get(m).add(b);
 		}
 		if(b.getClass()== PublishConfrenceBroadcast.class)
 		{
 			for(MicroService m :broadcastHashMap.get(PublishConfrenceBroadcast.class))
-				if(microServiceEvents.containsKey(m))
+				if(microServiceBroadcasts.containsKey(m))
 				microServiceBroadcasts.get(m).add(b);
 		}
-		synchronized (this) {
 			notifyAll();
-		}
 	}
 
 
 	@Override
-	public <T> Future<T> sendEvent(Event<T> e) {
+	public synchronized <T> Future<T> sendEvent(Event<T> e) {
 		// TODO Auto-generated method stub
 		Future<T> future = new Future<>();
 		e.setFuture(future);
@@ -121,9 +119,7 @@ public class MessageBusImpl implements MessageBus {
 					break;
 				}
 			}
-		synchronized (this) {
 			notifyAll();
-		}
 		return future;
 	}
 

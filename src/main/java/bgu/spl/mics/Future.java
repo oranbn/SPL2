@@ -53,14 +53,11 @@ public class Future<T> {
 	 * @PRE: result == null
 	 * @POST: result != null
      */
-	public void resolve (T result) {
+	public synchronized void resolve (T result) {
 		//TODO: implement this.
 		if(result!=null & this.result==null) {
 			this.result = result;
-			synchronized (this) {
 				notifyAll();
-			}
-
 		}
 	}
 	

@@ -13,12 +13,16 @@ import bgu.spl.mics.application.objects.*;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class ConferenceService extends MicroService {
-    private ConfrenceInformation confrenceInformation;
+    private final ConfrenceInformation confrenceInformation;
+
     public ConferenceService(String name, ConfrenceInformation confrenceInformation) {
         super(name);
         this.confrenceInformation = confrenceInformation;
         // TODO Implement this
     }
+
+    public ConfrenceInformation getConfrenceInformation() {return confrenceInformation;}
+
     @Override
     protected void initialize() {
         subscribeEvent(PublishResultsEvent.class, (PublishResultsEvent p)->{
@@ -27,6 +31,7 @@ public class ConferenceService extends MicroService {
         });
         subscribeBroadcast(TickBroadcast.class,(TickBroadcast t)->{if(confrenceInformation.tick(t)){terminate();
             sendBroadcast(new PublishConfrenceBroadcast(confrenceInformation.getModelList()));
+            System.out.println("Model Amount: "+confrenceInformation.getModelList().size());
             }});
 
     }

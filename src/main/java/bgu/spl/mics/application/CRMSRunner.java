@@ -1,6 +1,10 @@
 package bgu.spl.mics.application;
 
 import bgu.spl.mics.application.objects.*;
+import bgu.spl.mics.application.objects.jsonObjects.JsonConference;
+import bgu.spl.mics.application.objects.jsonObjects.JsonModel;
+import bgu.spl.mics.application.objects.jsonObjects.JsonOutput;
+import bgu.spl.mics.application.objects.jsonObjects.JsonStudent;
 import bgu.spl.mics.application.services.*;
 import com.google.gson.*;
 
@@ -18,30 +22,49 @@ import java.util.concurrent.Executors;
  * In the end, you should output a text file.
  */
 public class CRMSRunner {
-    public static int tickTime;
-    public static int duration;
     public static List<StudentService> studentServices;
     public static List<GPUService> GPUServices;
     public static List<CPUService> CPUServices;
     public static List<ConferenceService> ConferenceServices;
     public static TimeService timeService;
     public static ExecutorService executor;
+    public static JsonOutput jsonOutput;
     public static void main(String[] args) {
         initFields();
         initObjects();
         runServices();
         timeService.isDone();
         executor.shutdown();
-        System.out.println("oran3");
+        jsonOutput = new JsonOutput();
+        prepareOutput();
         try (Writer writer = new FileWriter("Output.json")) {
-            Gson gson = new GsonBuilder().create();
-            gson.toJson(studentServices.get(0).getStudent().getPapersRead(), writer);
+            System.out.println(studentServices.get(0).getStudent().getPapersRead());
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(jsonOutput, writer);
         }
         catch (Exception e)
         {
 
         }
-        System.out.println("oran2");
+        System.out.println("Done!");
+    }
+
+    private static void prepareOutput() {
+        for(StudentService studentService: studentServices) {
+            JsonStudent jsonStudent = new JsonStudent(studentService.getStudent());
+            for(Model m: studentService.getModelList())
+            {
+                if(m.getStatus() == Model.Status.Trained || m.getStatus() == Model.Status.Tested)
+                    jsonStudent.addTrainedModel(new JsonModel(m));
+            }
+            jsonOutput.addStudent(jsonStudent);
+        }
+        for(ConferenceService conferenceService: ConferenceServices){
+            JsonConference jsonConference = new JsonConference(conferenceService.getConfrenceInformation());
+            for(Model m : conferenceService.getConfrenceInformation().getModelList())
+                jsonConference.addPublishedModel(new JsonModel(m));
+            jsonOutput.addConference(jsonConference);
+        }
     }
 
 
@@ -68,19 +91,16 @@ public class CRMSRunner {
     }
     public static void initObjects(){
         try {
-            File inputFile = new File("C:\\Users\\yoavi\\OneDrive - post.bgu.ac.il\\Study\\Semester C\\SPL\\Projects\\hw2-OFFICIAL\\SPL2\\example_input.json");
+            File inputFile = new File("C:\\Users\\yoavi\\OneDrive - post.bgu.ac.il\\Study\\Semester C\\SPL\\Projects\\Tests\\example_input.json");
             JsonElement fileElement = JsonParser.parseReader(new FileReader(inputFile));
             JsonObject fileObject = fileElement.getAsJsonObject();
             initStudents(fileObject.get("Students").getAsJsonArray());
-            System.out.println("oran");
             initGPUS(fileObject.get("GPUS").getAsJsonArray());
             initCPUS(fileObject.get("CPUS").getAsJsonArray());
             initConferences(fileObject.get("Conferences").getAsJsonArray());
-            tickTime = fileObject.get("TickTime").getAsInt();
-            duration = fileObject.get("Duration").getAsInt();
-            System.out.println("oran");
+            int tickTime = fileObject.get("TickTime").getAsInt();
+            int duration = fileObject.get("Duration").getAsInt();
             timeService = new TimeService(tickTime,duration);
-            System.out.println("oran");
         }
         catch(Exception e)
         {
@@ -96,9 +116,9 @@ public class CRMSRunner {
             String type = modelJsonObject.get("type").getAsString();
             int size = modelJsonObject.get("size").getAsInt();
             Data.Type dataType;
-            if(type.equals("images"))
+            if(type.equals("images") || type.equals("Images"))
                 dataType = Data.Type.Images;
-            else if(type.equals("Text"))
+            else if(type.equals("Text") || type.equals("text"))
                 dataType = Data.Type.Text;
             else
                 dataType = Data.Type.Tabular;
@@ -140,8 +160,8 @@ public class CRMSRunner {
                 type = GPU.Type.RTX2080;
             else
                 type = GPU.Type.RTX3090;
-            GPU gpu = new GPU(type, Cluster.getInstance(), id);
             String GPUServiceName = "GPUService"+id;
+            GPU gpu = new GPU(type, Cluster.getInstance(), id, GPUServiceName);
             GPUService GPUService = new GPUService(GPUServiceName, gpu);
             GPUServices.add(GPUService);
             id++;

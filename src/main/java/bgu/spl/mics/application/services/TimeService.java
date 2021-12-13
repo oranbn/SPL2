@@ -50,6 +50,7 @@ public class TimeService extends MicroService{
 		synchronized (this){
 			notifyAll();
 		}
+	terminate();
 	}
 
 }

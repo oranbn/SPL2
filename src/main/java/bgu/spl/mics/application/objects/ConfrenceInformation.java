@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,17 +11,18 @@ public class ConfrenceInformation {
 
     private String name;
     private int date;
-
-    public List<Model> getModelList() {
-        return modelList;
-    }
-
-    private List<Model> modelList;
+    private final List<Model> modelList;
 
     public ConfrenceInformation(String name, int date) {
         this.name = name;
         this.date = date;
+        modelList = new ArrayList<>();
     }
+    public String getName() {return name;}
+    public void setName(String name) {this.name = name;}
+    public int getDate() {return date;}
+    public void setDate(int date) {this.date = date;}
+
     public boolean tick(TickBroadcast t){
         date -= t.getTickTime();
         if(date<=0)
@@ -32,4 +34,7 @@ public class ConfrenceInformation {
         modelList.add(p.getModel());
     }
 
+    public List<Model> getModelList() {
+        return modelList;
+    }
 }

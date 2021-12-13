@@ -18,7 +18,7 @@ public class CPUTest {
     public void setUp() throws Exception {
         cpu = new CPU(4, Cluster.getInstance());
         gpuType = GPU.Type.RTX3090;
-        gpu = new GPU(gpuType, Cluster.getInstance(), 0);
+        gpu = new GPU(gpuType, Cluster.getInstance(), 0, "");
         type = Data.Type.Images;
         data = new Data(type,0,10000);
         dataBatch = new DataBatch(data,0);

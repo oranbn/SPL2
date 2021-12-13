@@ -14,12 +14,12 @@ import java.util.List;
  */
 public class Cluster {
 	private static class ClusterHolder{
-		private static Cluster instance = new Cluster();
+		private final static Cluster instance = new Cluster();
 	}
 
 	/**
-     * Retrieves the single instance of this class.
-     */
+	 * Retrieves the single instance of this class.
+	 */
 	public static Cluster getInstance() {
 		return ClusterHolder.instance;
 	}
@@ -46,36 +46,46 @@ public class Cluster {
 		roundRobin1080 = 0;
 	}
 
-	public void addGPU(GPU gpu)
+	public synchronized void addGPU(GPU gpu)
 	{
 		GPUS.add(gpu);
 		processedDataBatchMap.put(gpu.getId(), new ArrayList<DataBatch>());
 	}
-	public void addCPU(CPU cpu)
+	public synchronized void addCPU(CPU cpu)
 	{
 		CPUS.add(cpu);
 	}
 
 	//CPU to GPU
-	public void processedDataBatch(DataBatch dataBatch, int gpuID) {
+	public synchronized void processedDataBatch(DataBatch dataBatch, int gpuID) {
 		if(!GPUS.get(gpuID).addProcessedDataBatch(dataBatch))
 			processedDataBatchMap.get(gpuID).add(dataBatch);
 	}
-	public void getNextDataBatches(int gpuID) {
-		processedDataBatch(processedDataBatchMap.get(gpuID).remove(0), gpuID);
+	public synchronized void getNextDataBatches(int gpuID) {
+		if(processedDataBatchMap.get(gpuID).size()>0)
+			processedDataBatch(processedDataBatchMap.get(gpuID).remove(0), gpuID);
 	}
 	public HashMap<Integer, List<DataBatch>> getProcessedDataBatchMap(){return processedDataBatchMap;}
 	//GPU to CPU
 	public synchronized void process(List<DataBatch> unProcessedDataBatch, int gpuID, GPU.Type type) {
-		for(CPU cpu : CPUS)
-			if(cpu.canProcess(unProcessedDataBatch.get(0), gpuID))
+		for(CPU cpu : CPUS) {
+			if (unProcessedDataBatch.size() == 0)
+				return;
+			if (cpu.canProcess(unProcessedDataBatch.get(0), gpuID))
 				unProcessedDataBatch.remove(0);
-		if(type == GPU.Type.RTX3090)
+		}
+		if(type == GPU.Type.RTX3090) {
+			unprocessedDataBatchMapGPU_RTX3090.remove(gpuID);
 			unprocessedDataBatchMapGPU_RTX3090.put(gpuID, unProcessedDataBatch);
-		if(type == GPU.Type.RTX2080)
+		}
+		if(type == GPU.Type.RTX2080) {
+			unprocessedDataBatchMapGPU_RTX2080.remove(gpuID);
 			unprocessedDataBatchMapGPU_RTX2080.put(gpuID, unProcessedDataBatch);
-		if(type == GPU.Type.GTX1080)
+		}
+		if(type == GPU.Type.GTX1080) {
+			unprocessedDataBatchMapGPU_GTX1080.remove(gpuID);
 			unprocessedDataBatchMapGPU_GTX1080.put(gpuID, unProcessedDataBatch);
+		}
 	}
 
 	public synchronized void getNextDataBatch(CPU cpu) {

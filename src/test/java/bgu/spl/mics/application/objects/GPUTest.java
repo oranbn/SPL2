@@ -23,7 +23,7 @@ public class GPUTest {
         type = GPU.Type.RTX2080;
         cluster = Cluster.getInstance();
         id = 0;
-        gpu = new GPU(type,cluster,id);
+        gpu = new GPU(type,cluster,id, "");
         data = new Data(dataType, 0, 10000);
         degree = Student.Degree.MSc;
         student = new Student("Moshe", "SE", degree);

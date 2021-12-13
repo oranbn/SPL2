@@ -9,22 +9,22 @@
             [
                 {
                     "name": "YOLO10",
-                    "type": "Images",
+                    "type": "images",
                     "size": 200000
                 },
                 {
                     "name": "ResNet9000",
-                    "type": "Images",
+                    "type": "images",
                     "size": 200000
                 },
                 {
                     "name": "LessEfficientNet",
-                    "type": "Images",
+                    "type": "images",
                     "size": 20000
                 },
                 {
                     "name": "DensestNet",
-                    "type": "Images",
+                    "type": "images",
                     "size": 200000
                 }
             ]
@@ -38,8 +38,8 @@
             [
                 {
                     "name": "VIT",
-                    "type": "Images",
-                    "size": 100000000
+                    "type": "images",
+                    "size": 1000000
                 }
             ]
 
@@ -110,22 +110,22 @@
             [
                 {
                     "name": "YOLO9000",
-                    "type": "Images",
+                    "type": "images",
                     "size": 100000
                 },
                 {
                     "name": "VIT2",
-                    "type": "Images",
+                    "type": "images",
                     "size": 1000000
                 },
                 {
                     "name": "MuchMoreEfficientNet",
-                    "type": "Images",
+                    "type": "images",
                     "size": 20000
                 },
                 {
                     "name": "DenserNet",
-                    "type": "Images",
+                    "type": "images",
                     "size": 100000
                 }
             ]
@@ -142,6 +142,6 @@
         {"name": "ECCV", "date": 40000},
         {"name": "AISTATS", "date": 50000}
     ],
-    "TickTime": 1,
+    "TickTime": 2,
     "Duration": 55000
 }

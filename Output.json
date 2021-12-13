@@ -1,1 +1,160 @@
-0
+{
+  "students": [
+    {
+      "name": "Simba",
+      "department": "Computer Science",
+      "status": "MSc",
+      "publications": 0,
+      "papersRead": 0,
+      "trainedModels": [
+        {
+          "name": "YOLO10",
+          "data": {
+            "type": "Images",
+            "processed": 200000,
+            "size": 200000
+          },
+          "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "ResNet9000",
+          "data": {
+            "type": "Images",
+            "processed": 200000,
+            "size": 200000
+          },
+          "status": "Trained",
+          "results": "None"
+        }
+      ]
+    },
+    {
+      "name": "Zazu",
+      "department": "EE",
+      "status": "PhD",
+      "publications": 0,
+      "papersRead": 0,
+      "trainedModels": []
+    },
+    {
+      "name": "Pumba",
+      "department": "Computer Science",
+      "status": "PhD",
+      "publications": 0,
+      "papersRead": 0,
+      "trainedModels": [
+        {
+          "name": "Bert",
+          "data": {
+            "type": "Text",
+            "processed": 1000000,
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
+      "name": "Timon",
+      "department": "SE",
+      "status": "MSc",
+      "publications": 0,
+      "papersRead": 0,
+      "trainedModels": [
+        {
+          "name": "Percepetron",
+          "data": {
+            "type": "Tabular",
+            "processed": 1000000,
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Bad"
+        },
+        {
+          "name": "GNN",
+          "data": {
+            "type": "Tabular",
+            "processed": 1000000,
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Bad"
+        }
+      ]
+    },
+    {
+      "name": "Nala",
+      "department": "Computer Science",
+      "status": "PhD",
+      "publications": 0,
+      "papersRead": 0,
+      "trainedModels": [
+        {
+          "name": "YOLO9000",
+          "data": {
+            "type": "Images",
+            "processed": 100000,
+            "size": 100000
+          },
+          "status": "Trained",
+          "results": "None"
+        }
+      ]
+    }
+  ],
+  "conferences": [
+    {
+      "name": "ICML",
+      "date": 0,
+      "publications": []
+    },
+    {
+      "name": "NeurIPS",
+      "date": 25000,
+      "publications": []
+    },
+    {
+      "name": "CVPR",
+      "date": 0,
+      "publications": [
+        {
+          "name": "Bert",
+          "data": {
+            "type": "Text",
+            "processed": 1000000,
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
+      "name": "ECCV",
+      "date": 0,
+      "publications": [
+        {
+          "name": "YOLO10",
+          "data": {
+            "type": "Images",
+            "processed": 200000,
+            "size": 200000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
+      "name": "AISTATS",
+      "date": 0,
+      "publications": []
+    }
+  ],
+  "cpuTimeUsed": 274982,
+  "gpuTimeUsed": 51573,
+  "batchesProcessed": 65154
+}

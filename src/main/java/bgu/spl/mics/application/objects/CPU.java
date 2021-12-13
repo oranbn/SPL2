@@ -22,6 +22,7 @@ public class CPU {
         this.cluster = cluster;
         this.ticks = 0;
         this.processing = false;
+        Cluster.getInstance().addCPU(this);
     }
     /**
      * <p>
@@ -91,7 +92,7 @@ public class CPU {
      * @POST: none
      */
     //entering a batch to a cpu, which will make it "processing"
-    public boolean canProcess(DataBatch dataBatch, int id) {
+    public synchronized boolean canProcess(DataBatch dataBatch, int id) {
         if (getProcessing())
             return false;
         process(dataBatch, id);
@@ -143,7 +144,9 @@ public class CPU {
         if (ticks == 0)
             return;
         ticks--;
+        Statistics.getInstance().setCPU_timeUnitUsed(Statistics.getInstance().getCPU_timeUnitUsed()+1);
         if (ticks == 0) {
+            Statistics.getInstance().setCPU_processedDataBatches(Statistics.getInstance().getCPU_processedDataBatches()+1);
             processing = false;
             cluster.processedDataBatch(dataBatch, gpuID);
             cluster.getNextDataBatch(this);

@@ -14,6 +14,14 @@ import java.util.*;
  */
 public class GPU {
 
+    public boolean isTraining() {
+        return training;
+    }
+
+    public void setTraining(boolean training) {
+        this.training = training;
+    }
+
     /**
      * Enum representing the type of the GPU.
      */
@@ -22,17 +30,21 @@ public class GPU {
     private Type type;
     private Model model;
     private Cluster cluster;
+    private boolean training;
     private int id; //gpu id to pass forward
     private Queue<DataBatch> processedDataBatchQueue;
     private int ticksNeeded;
     private int currentTicks;
     private int dataBatchAmount; //how many batches we got from the data
     private int processedDataBatchesLimit; //limit of queue size
-
-    public GPU(Type type, Cluster cluster, int id) {
+    private String name;
+    private int trainCounter;
+    public GPU(Type type, Cluster cluster, int id, String name) {
         this.type = type;
         this.cluster = cluster;
         this.id = id;
+        this.name = name;
+        this.trainCounter = 0;
         dataBatchAmount = 0;
         switch (type) {
             case GTX1080:
@@ -49,8 +61,11 @@ public class GPU {
                 break;
         }
         currentTicks = 0;
+        training = false;
         processedDataBatchQueue = new LinkedList<DataBatch>();
+        Cluster.getInstance().addGPU(this);
     }
+    public String getName(){return name;}
 
     /**
      * <p>
@@ -160,11 +175,17 @@ public class GPU {
      * @POST: none
      */
     public boolean trainModel(Model m) {
-        if (model != null)
+        if (training) {
+            System.out.println(name + " Denied in trainModel and the model is: "+m.getName());
             return false;
+        }
+        System.out.println(name + " Accepted in trainModel to the model: "+m.getName());
         model = m;
+        trainCounter++;
+        System.out.println(name+ " train counter is: "+trainCounter);
         Model.Status status = Model.Status.Training;
         currentTicks = ticksNeeded;
+        training = true;
         model.setStatus(status);
         splitDataToBatches();
         return true;
@@ -204,8 +225,11 @@ public class GPU {
      * @POST: none
      */
     public boolean testModel(Model m) {
-        if (model != null)
+        if (training) {
+            System.out.println("Denied in testModel " + name);
             return false;
+        }
+        System.out.println("Accepted in testModel " + name);
         model = m;
         doTest();
         return true;
@@ -245,6 +269,7 @@ public class GPU {
         }
         model.setStatus(tested);
         model = null;
+        System.out.println("Finished testModel " + name);
     }
 
     /**
@@ -255,13 +280,23 @@ public class GPU {
      * @POST: none
      */
     public boolean tick() {
+/*
+        System.out.println("GPU: " + getName() + " Got TickRequest, his currentstick: "+currentTicks+"  processedDatabatch size is: "+processedDataBatchQueue.size());
+*/
         if (currentTicks == 0 || processedDataBatchQueue.size()==0)
             return false;
+/*
+        System.out.println("GPU: " + getName() + " Passed first condition");
+*/
         currentTicks--;
+        Statistics.getInstance().setGPU_timeUnitUsed(Statistics.getInstance().getGPU_timeUnitUsed()+1);
         if (currentTicks == 0) {
             processedDataBatchQueue.poll();
             currentTicks = ticksNeeded;
             dataBatchAmount--;
+/*
+            System.out.println("GPU: " + getName() + "; data batch amount left:"+dataBatchAmount);
+*/
             getModelData().process();
             if (dataBatchAmount == 0){
                 finishTrain();
@@ -287,8 +322,9 @@ public class GPU {
         Model.Status status = Model.Status.Trained;
         model.setStatus(status);
         model = null;
+        training = false;
         currentTicks = 0;
-        //return true;
+        System.out.println("Finished trainModel " + name);
     }
 
     /**

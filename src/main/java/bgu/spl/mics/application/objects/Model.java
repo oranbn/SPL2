@@ -19,9 +19,9 @@ public class Model {
         None, Good, Bad;
     }
 
-    private String name;
-    private Data data;
-    private Student student;
+    private final String name;
+    private final Data data;
+    private final Student student;
     private Status status;
     private Results results;
 
@@ -38,7 +38,9 @@ public class Model {
     public Status getStatus() {
         return status;
     }
-
+    public String getName() {
+        return name;
+    }
     public void setStatus(Status status) {
         this.status = status;
     }

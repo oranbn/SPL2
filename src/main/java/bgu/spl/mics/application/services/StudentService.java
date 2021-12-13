@@ -11,6 +11,7 @@ import bgu.spl.mics.application.objects.TestModelEvent;
 import bgu.spl.mics.application.objects.PublishResultsEvent;
 
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.util.List;
 
 /**
@@ -28,6 +29,11 @@ public class StudentService extends MicroService {
     }
 
     private final Student student;
+
+    public List<Model> getModelList() {
+        return modelList;
+    }
+
     private final List<Model> modelList;
     public StudentService(String name, Student student, List<Model> modelList) {
         super(name);
@@ -40,38 +46,35 @@ public class StudentService extends MicroService {
     protected void initialize() {
         subscribeBroadcast(PublishConfrenceBroadcast.class, (PublishConfrenceBroadcast publishConfrenceBroadcast )->{
             List<Model> modelList = publishConfrenceBroadcast.getModelList();
+            System.out.println(getName()+" Got publishconferenseBroadCast");
             for(Model m : modelList)
             {
                 if(this.student == m.getStudent())
                     student.setPublications(student.getPublications()+1);
                 else
                     student.setPapersRead(student.getPapersRead()+1);
+                System.out.println(getName()+" publictions: "+student.getPublications() +" read: "+student.getPapersRead());
             }
         });
+        int i = 0;
+        System.out.println(getName()+ " has "+modelList.size() +" Models");
         for(Model m: modelList) {
+            System.out.println(getName()+" iteration: "+i++);
             Future<Model> trainModelFuture = sendEvent(new TrainModelEvent(m));
             Model trainedModel = trainModelFuture.get();
+            System.out.println(getName()+" iteration: "+i++ +" passed trainmodel");
             if(trainedModel != null && trainedModel.getStatus() == Model.Status.Trained)
             {
                 Future<Model> testModelFuture = sendEvent(new TestModelEvent(trainedModel));
                 Model testedModel = testModelFuture.get();
+                System.out.println(getName()+" iteration: "+i++ +" passed testmodel");
                 if(testedModel != null && testedModel.getResults() == Model.Results.Good)
                 {
                     Future<Model> publishedModelFuture = sendEvent(new PublishResultsEvent(testedModel));
-                    Model publishedModel = publishedModelFuture.get();
+                    /*Model publishedModel = publishedModelFuture.get();*/
                 }
             }
         }
+        System.out.println("yoav yatza ma loop");
     }
 }
-// po ani rotze send event:
-// Future<Model> f = sendEvent(trainModel);
-// Model m = f.get();
-// m.getStatus() == trained
-// Future<Model> f2 = sendEvent(testModel);
-// Model m2 = f2.get();
-// m2.getResults() == good
-// Future<Model> f3 = sendEvent(publishREsults)
-// student.setPublictions(student.getpublictions+1)
-// else
-// start loop again

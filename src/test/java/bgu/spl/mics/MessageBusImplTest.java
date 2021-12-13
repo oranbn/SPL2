@@ -27,7 +27,7 @@ public class MessageBusImplTest {
     public void setUp() throws Exception {
         messageBus = MessageBusImpl.getInstance();
         cpuS1 = new CPUService("CPU1", new CPU(32, Cluster.getInstance()));
-        gpuS1 = new GPUService("GPU1", new GPU(GPU.Type.RTX3090, Cluster.getInstance(),0));
+        gpuS1 = new GPUService("GPU1", new GPU(GPU.Type.RTX3090, Cluster.getInstance(),0, ""));
         data = new Data(dataType, 0, 10000);
         degree = Student.Degree.MSc;
         student = new Student("Moshe", "SE", degree);
