@@ -24,7 +24,7 @@ public class ConfrenceInformation {
     public void setDate(int date) {this.date = date;}
 
     public boolean tick(TickBroadcast t){
-        date -= t.getTickTime();
+        date -= 1;
         if(date<=0)
             return true;
         return false;

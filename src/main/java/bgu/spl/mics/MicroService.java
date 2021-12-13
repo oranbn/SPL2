@@ -164,6 +164,7 @@ public abstract class MicroService implements Runnable {
                 e.printStackTrace();
             }
         }
+        System.out.println(name +" is terminated");
         MessageBusImpl.getInstance().unregister(this);
     }
 }

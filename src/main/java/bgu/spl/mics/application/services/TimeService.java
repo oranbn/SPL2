@@ -2,6 +2,7 @@ package bgu.spl.mics.application.services;
 
 import bgu.spl.mics.MessageBusImpl;
 import bgu.spl.mics.MicroService;
+import bgu.spl.mics.application.objects.TerminateBroadcast;
 import bgu.spl.mics.application.objects.TickBroadcast;
 
 import java.util.List;
@@ -23,33 +24,20 @@ public class TimeService extends MicroService{
 		this.tickTime = tickTime;
 		this.duration = duration;
 	}
-	public boolean isDone()
-	{
-		while(duration>0)
-			synchronized (this){
-				try {
-					wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		return true;
-	}
+
 	@Override
 	protected void initialize() {
 		while(duration>0)
 		{
 			try {
 				sendBroadcast(new TickBroadcast(tickTime));
-				duration -= tickTime;
+				duration -= 1;
 				Thread.sleep(tickTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		synchronized (this){
-			notifyAll();
-		}
+		sendBroadcast(new TerminateBroadcast());
 	terminate();
 	}
 

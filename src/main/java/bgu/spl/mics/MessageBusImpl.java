@@ -27,6 +27,7 @@ public class MessageBusImpl implements MessageBus {
 		eventsHashMap.put(PublishResultsEvent.class, new ArrayList<>());
 		broadcastHashMap.put(TickBroadcast.class, new ArrayList<>());
 		broadcastHashMap.put(PublishConfrenceBroadcast.class, new ArrayList<>());
+		broadcastHashMap.put(TerminateBroadcast.class, new ArrayList<>());
 		trainModelIterator = new RoundRobinImpl<>(eventsHashMap.get(TrainModelEvent.class)).iterator();
 		testModelIterator = new RoundRobinImpl<>(eventsHashMap.get(TestModelEvent.class)).iterator();
 		publishResultsIterator = new RoundRobinImpl<>(eventsHashMap.get(PublishResultsEvent.class)).iterator();
@@ -82,6 +83,12 @@ public class MessageBusImpl implements MessageBus {
 			for(MicroService m :broadcastHashMap.get(PublishConfrenceBroadcast.class))
 				if(microServiceBroadcasts.containsKey(m))
 				microServiceBroadcasts.get(m).add(b);
+		}
+		if(b.getClass()== TerminateBroadcast.class)
+		{
+			for(MicroService m :broadcastHashMap.get(TerminateBroadcast.class))
+				if(microServiceBroadcasts.containsKey(m))
+					microServiceBroadcasts.get(m).add(b);
 		}
 			notifyAll();
 	}

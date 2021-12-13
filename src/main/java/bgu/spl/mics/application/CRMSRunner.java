@@ -15,30 +15,37 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /** This is the Main class of Compute Resources Management System application. You should parse the input file,
  * create the different instances of the objects, and run the system.
  * In the end, you should output a text file.
  */
 public class CRMSRunner {
-    public static List<StudentService> studentServices;
-    public static List<GPUService> GPUServices;
-    public static List<CPUService> CPUServices;
-    public static List<ConferenceService> ConferenceServices;
-    public static TimeService timeService;
-    public static ExecutorService executor;
-    public static JsonOutput jsonOutput;
+    private static List<StudentService> StudentServices;
+    private static List<GPUService> GPUServices;
+    private static List<CPUService> CPUServices;
+    private static List<ConferenceService> ConferenceServices;
+    private static List<Thread> ConferenceServiceThreads;
+    private static List<Thread> StudentServiceThreads;
+    private static List<Thread> GPUServiceThreads;
+    private static List<Thread> CPUServiceThreads;
+    private static Thread timeServiceThread;
+    private static TimeService timeService;
+    private static ExecutorService executor;
+    private static JsonOutput jsonOutput;
     public static void main(String[] args) {
         initFields();
         initObjects();
         runServices();
-        timeService.isDone();
-        executor.shutdown();
+        waitTillDone();
+        MakeOutputFile();
+    }
+
+    private static void MakeOutputFile() {
         jsonOutput = new JsonOutput();
         prepareOutput();
         try (Writer writer = new FileWriter("Output.json")) {
-            System.out.println(studentServices.get(0).getStudent().getPapersRead());
+            System.out.println(StudentServices.get(0).getStudent().getPapersRead());
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(jsonOutput, writer);
         }
@@ -49,8 +56,43 @@ public class CRMSRunner {
         System.out.println("Done!");
     }
 
+    private static void waitTillDone() {
+        for(Thread t : StudentServiceThreads) {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        for(Thread t : GPUServiceThreads)
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        for(Thread t : CPUServiceThreads)
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        for(Thread t : ConferenceServiceThreads)
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        try {
+            timeServiceThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private static void prepareOutput() {
-        for(StudentService studentService: studentServices) {
+        for(StudentService studentService: StudentServices) {
             JsonStudent jsonStudent = new JsonStudent(studentService.getStudent());
             for(Model m: studentService.getModelList())
             {
@@ -69,25 +111,43 @@ public class CRMSRunner {
 
 
     private static void runServices() {
-        int threads=CPUServices.size()+GPUServices.size()+ConferenceServices.size()+studentServices.size()+1;
-        executor = Executors.newFixedThreadPool(threads);
-        for(CPUService cpuService: CPUServices)
-            executor.execute(cpuService);
-        for(GPUService gpuService: GPUServices)
-            executor.execute(gpuService);
-        for(ConferenceService conferenceService: ConferenceServices)
-            executor.execute(conferenceService);
-        for(StudentService studentService: studentServices)
-            executor.execute(studentService);
-        executor.execute(timeService);
-
+        for(CPUService cpuService : CPUServices)
+        {
+            Thread thread = new Thread(cpuService);
+            CPUServiceThreads.add(thread);
+            thread.start();
+        }
+        for(GPUService gpuService : GPUServices)
+        {
+            Thread thread = new Thread(gpuService);
+            GPUServiceThreads.add(thread);
+            thread.start();
+        }
+        for(ConferenceService conferenceService : ConferenceServices)
+        {
+            Thread thread = new Thread(conferenceService);
+            ConferenceServiceThreads.add(thread);
+            thread.start();
+        }
+        for(StudentService studentService : StudentServices)
+        {
+            Thread thread = new Thread(studentService);
+            StudentServiceThreads.add(thread);
+            thread.start();
+        }
+        timeServiceThread = new Thread(timeService);
+        timeServiceThread.start();
     }
 
     public static void initFields(){
-        studentServices = new ArrayList<>();
+        StudentServices = new ArrayList<>();
         GPUServices = new ArrayList<>();
         CPUServices = new ArrayList<>();
         ConferenceServices = new ArrayList<>();
+        ConferenceServiceThreads = new ArrayList<>();
+        StudentServiceThreads = new ArrayList<>();
+        GPUServiceThreads = new ArrayList<>();
+        CPUServiceThreads = new ArrayList<>();
     }
     public static void initObjects(){
         try {
@@ -145,7 +205,7 @@ public class CRMSRunner {
             List<Model> model = initModel(studentJsonObject.get("models").getAsJsonArray(), student);
             String serviceName = "studentService"+index;
             StudentService studentService = new StudentService(serviceName, student, model);
-            studentServices.add(studentService);
+            StudentServices.add(studentService);
             index++;
         }
     }

@@ -33,6 +33,6 @@ public class ConferenceService extends MicroService {
             sendBroadcast(new PublishConfrenceBroadcast(confrenceInformation.getModelList()));
             System.out.println("Model Amount: "+confrenceInformation.getModelList().size());
             }});
-
+        subscribeBroadcast(TerminateBroadcast.class,(t)-> terminate());
     }
 }

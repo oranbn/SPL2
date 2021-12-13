@@ -71,6 +71,6 @@ public class GPUService extends MicroService {
                 }
             }
         });
-
+        subscribeBroadcast(TerminateBroadcast.class,(t)-> terminate());
     }
 }
