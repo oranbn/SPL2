@@ -60,12 +60,16 @@ public class StudentService extends MicroService {
                 Future<Model> trainModelFuture = sendEvent(new TrainModelEvent(m));
                 Model trainedModel = trainModelFuture.get();
                 System.out.println(getName()+" iteration: "+i +" passed trainmodel");
-                if(trainedModel != null && trainedModel.getStatus() == Model.Status.Trained)
+                if(trainedModel == null || trainedModel.getStatus() == Model.Status.PreTrained || trainedModel.getStatus() == Model.Status.Training)
+                    break;
+                if(trainedModel.getStatus() == Model.Status.Trained)
                 {
                     Future<Model> testModelFuture = sendEvent(new TestModelEvent(trainedModel));
                     Model testedModel = testModelFuture.get();
                     System.out.println(getName()+" iteration: "+i +" passed testmodel");
-                    if(testedModel != null && testedModel.getResults() == Model.Results.Good)
+                    if(testedModel == null || testedModel.getResults() == Model.Results.None)
+                        break;
+                    if(testedModel.getResults() == Model.Results.Good)
                     {
                         Future<Model> publishedModelFuture = sendEvent(new PublishResultsEvent(testedModel));
                         /*Model publishedModel = publishedModelFuture.get();*/

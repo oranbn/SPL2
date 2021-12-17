@@ -10,7 +10,6 @@ public class RoundRobinImpl<MicroService> implements Iterable<MicroService> {
     public RoundRobinImpl(List<MicroService> coll) {
         this.coll = coll;
     }
-
     public Iterator<MicroService> iterator() {
         return new Iterator<MicroService>() {
             @Override

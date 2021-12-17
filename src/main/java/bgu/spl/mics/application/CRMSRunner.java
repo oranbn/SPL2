@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 /** This is the Main class of Compute Resources Management System application. You should parse the input file,
@@ -29,8 +30,10 @@ public class CRMSRunner {
     private static List<Thread> StudentServiceThreads;
     private static List<Thread> GPUServiceThreads;
     private static List<Thread> CPUServiceThreads;
+    public static int ConferencesAmount;
     private static Thread timeServiceThread;
     private static TimeService timeService;
+
     private static ExecutorService executor;
     private static JsonOutput jsonOutput;
     public static void main(String[] args) {
@@ -39,13 +42,17 @@ public class CRMSRunner {
         runServices();
         waitTillDone();
         MakeOutputFile();
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
+        for (Thread t : threads) {
+            System.out.printf("%-15s \t %-15s \t %-15d \t %s\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());
+        }
     }
 
     private static void MakeOutputFile() {
         jsonOutput = new JsonOutput();
         prepareOutput();
         try (Writer writer = new FileWriter("Output.json")) {
-            System.out.println(StudentServices.get(0).getStudent().getPapersRead());
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             gson.toJson(jsonOutput, writer);
         }
@@ -158,6 +165,7 @@ public class CRMSRunner {
             initGPUS(fileObject.get("GPUS").getAsJsonArray());
             initCPUS(fileObject.get("CPUS").getAsJsonArray());
             initConferences(fileObject.get("Conferences").getAsJsonArray());
+            ConferencesAmount = ConferenceServices.size();
             int tickTime = fileObject.get("TickTime").getAsInt();
             int duration = fileObject.get("Duration").getAsInt();
             timeService = new TimeService(tickTime,duration);

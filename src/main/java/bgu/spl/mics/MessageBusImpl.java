@@ -1,5 +1,6 @@
 package bgu.spl.mics;
 
+import bgu.spl.mics.application.CRMSRunner;
 import bgu.spl.mics.application.objects.*;
 
 import java.util.*;
@@ -49,7 +50,7 @@ public class MessageBusImpl implements MessageBus {
 
 
 	@Override
-	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) {
+	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) { //maybe sync it
 		// TODO Auto-generated method stub
 		if(registerList.contains(m))
 			if(!eventsHashMap.get(type).contains(m))
@@ -57,7 +58,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) {
+	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) { //maybe sync it
 		// TODO Auto-generated method stub
 		if(registerList.contains(m))
 			if(!broadcastHashMap.get(type).contains(m))
@@ -70,7 +71,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public synchronized void sendBroadcast(Broadcast b) {
+	public void sendBroadcast(Broadcast b) {
 		// TODO Auto-generated method stub
 		if(b.getClass()== TickBroadcast.class)
 		{
@@ -90,7 +91,9 @@ public class MessageBusImpl implements MessageBus {
 				if(microServiceBroadcasts.containsKey(m))
 					microServiceBroadcasts.get(m).add(b);
 		}
+		synchronized (this) {
 			notifyAll();
+		}
 	}
 
 
@@ -117,21 +120,26 @@ public class MessageBusImpl implements MessageBus {
 					break;
 				}
 			}
-		if(e.getClass()== PublishResultsEvent.class)
-			while(true)
-			{
+		if(e.getClass()== PublishResultsEvent.class) {
+			int count = 0;
+			while (true) {
+				if(count> CRMSRunner.ConferencesAmount) {
+					return null;
+				}
 				MicroService m = publishResultsIterator.next();
-				if(microServiceEvents.containsKey(m)) {
+				if (microServiceEvents.containsKey(m)) {
 					microServiceEvents.get(m).add(e);
 					break;
 				}
+				count++;
 			}
+		}
 			notifyAll();
 		return future;
 	}
 
 	@Override
-	public void register(MicroService m) {
+	public synchronized void register(MicroService m) {
 		// TODO Auto-generated method stub
 		if(!registerList.contains(m)){
 			registerList.add(m);
@@ -141,7 +149,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public void unregister(MicroService m) {
+	public synchronized void unregister(MicroService m) {
 		// TODO Auto-generated method stub
 		registerList.remove(m);
 		microServiceEvents.remove(m);

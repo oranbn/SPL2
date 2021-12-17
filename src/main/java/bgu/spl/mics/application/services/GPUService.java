@@ -16,7 +16,7 @@ import java.util.List;
  * You MAY change constructor signatures and even add new public constructors.
  */
 public class GPUService extends MicroService {
-    private GPU gpu;
+    private final GPU gpu;
     private final List<Event<Model>> trainModelEvent;
     private final List<Event<Model>> testModelEvent;
     public GPUService(String name, GPU gpu) {
@@ -71,6 +71,15 @@ public class GPUService extends MicroService {
                 }
             }
         });
-        subscribeBroadcast(TerminateBroadcast.class,(t)-> terminate());
+        subscribeBroadcast(TerminateBroadcast.class,(t)-> {
+            while(trainModelEvent.size()>0) {
+                complete(trainModelEvent.get(0), trainModelEvent.get(0).getModel());
+                trainModelEvent.remove(0);
+            }
+            while(testModelEvent.size()>0) {
+                complete(testModelEvent.get(0), testModelEvent.get(0).getModel());
+                testModelEvent.remove(0);
+            }
+            terminate();});
     }
 }

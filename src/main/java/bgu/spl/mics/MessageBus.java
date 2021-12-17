@@ -73,6 +73,7 @@ public interface MessageBus {
      * @param e     	The event to add to the queue.
      * @return {@link Future<T>} object to be resolved once the processing is complete,
      * 	       null in case no micro-service has subscribed to {@code e.getClass()}.
+     * 	       //null can happen
      * @PRE: none
      * @POST: isMicroServiceEventsEmpty() == false
      */

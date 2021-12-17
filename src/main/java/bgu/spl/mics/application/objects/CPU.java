@@ -144,9 +144,9 @@ public class CPU {
         if (ticks == 0)
             return;
         ticks--;
-        Statistics.getInstance().setCPU_timeUnitUsed(Statistics.getInstance().getCPU_timeUnitUsed()+1);
+        Statistics.getInstance().setCPU_timeUnitUsed();
         if (ticks == 0) {
-            Statistics.getInstance().setCPU_processedDataBatches(Statistics.getInstance().getCPU_processedDataBatches()+1);
+            Statistics.getInstance().setCPU_processedDataBatches();
             processing = false;
             cluster.processedDataBatch(dataBatch, gpuID);
             cluster.getNextDataBatch(this);
