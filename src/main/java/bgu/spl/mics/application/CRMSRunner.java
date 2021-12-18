@@ -41,6 +41,7 @@ public class CRMSRunner {
         initObjects();
         runServices();
         waitTillDone();
+        System.out.println("oran");
         MakeOutputFile();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
@@ -163,7 +164,7 @@ public class CRMSRunner {
     }
     public static void initObjects(){
         try {
-            File inputFile = new File("C:\\Users\\yoavi\\OneDrive - post.bgu.ac.il\\Study\\Semester C\\SPL\\Projects\\Tests\\example_input.json");
+            File inputFile = new File("C:\\Users\\User\\Desktop\\SPL2\\example_input.json");
             JsonElement fileElement = JsonParser.parseReader(new FileReader(inputFile));
             JsonObject fileObject = fileElement.getAsJsonObject();
             initStudents(fileObject.get("Students").getAsJsonArray());

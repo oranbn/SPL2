@@ -141,8 +141,10 @@ public class CPU {
      * @POST: none
      */
     public void tick() {
-        if (ticks == 0)
+        if (ticks == 0) {
+            System.out.println("lost tick :)");
             return;
+        }
         ticks--;
         cluster.getStatistics().setCPU_timeUnitUsed();
         if (ticks == 0) {

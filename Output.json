@@ -4,21 +4,11 @@
       "name": "Simba",
       "department": "Computer Science",
       "status": "MSc",
-      "publications": 1,
-      "papersRead": 4,
+      "publications": 0,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "YOLO10",
-          "data": {
-            "type": "Images",
-            "processed": 200000,
-            "size": 200000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "ResNet9000",
           "data": {
             "type": "Images",
             "processed": 200000,
@@ -34,7 +24,7 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 5,
+      "papersRead": 2,
       "trainedModels": []
     },
     {
@@ -42,7 +32,7 @@
       "department": "Computer Science",
       "status": "PhD",
       "publications": 1,
-      "papersRead": 4,
+      "papersRead": 1,
       "trainedModels": [
         {
           "name": "Bert",
@@ -70,8 +60,8 @@
       "name": "Timon",
       "department": "SE",
       "status": "MSc",
-      "publications": 2,
-      "papersRead": 3,
+      "publications": 0,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "Percepetron",
@@ -90,28 +80,8 @@
             "processed": 1000000,
             "size": 1000000
           },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "MoreStyleGAN",
-          "data": {
-            "type": "Images",
-            "processed": 100000,
-            "size": 100000
-          },
-          "status": "Tested",
-          "results": "Bad"
-        },
-        {
-          "name": "ConditionalGAN",
-          "data": {
-            "type": "Images",
-            "processed": 500000,
-            "size": 500000
-          },
-          "status": "Tested",
-          "results": "Good"
+          "status": "Trained",
+          "results": "None"
         }
       ]
     },
@@ -120,7 +90,7 @@
       "department": "Computer Science",
       "status": "PhD",
       "publications": 1,
-      "papersRead": 4,
+      "papersRead": 1,
       "trainedModels": [
         {
           "name": "YOLO9000",
@@ -139,53 +109,10 @@
     {
       "name": "ICML",
       "date": 0,
-      "publications": [
-        {
-          "name": "GNN",
-          "data": {
-            "type": "Tabular",
-            "processed": 1000000,
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "publications": []
     },
     {
       "name": "NeurIPS",
-      "date": 0,
-      "publications": [
-        {
-          "name": "Bert",
-          "data": {
-            "type": "Text",
-            "processed": 1000000,
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
-    },
-    {
-      "name": "CVPR",
-      "date": 0,
-      "publications": [
-        {
-          "name": "ConditionalGAN",
-          "data": {
-            "type": "Images",
-            "processed": 500000,
-            "size": 500000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
-    },
-    {
-      "name": "ECCV",
       "date": 0,
       "publications": [
         {
@@ -201,23 +128,33 @@
       ]
     },
     {
-      "name": "AISTATS",
+      "name": "CVPR",
+      "date": 0,
+      "publications": []
+    },
+    {
+      "name": "ECCV",
       "date": 0,
       "publications": [
         {
-          "name": "YOLO10",
+          "name": "Bert",
           "data": {
-            "type": "Images",
-            "processed": 200000,
-            "size": 200000
+            "type": "Text",
+            "processed": 1000000,
+            "size": 1000000
           },
           "status": "Tested",
           "results": "Good"
         }
       ]
+    },
+    {
+      "name": "AISTATS",
+      "date": 0,
+      "publications": []
     }
   ],
   "cpuTimeUsed": 385000,
-  "gpuTimeUsed": 69676,
-  "batchesProcessed": 71247
+  "gpuTimeUsed": 66838,
+  "batchesProcessed": 71248
 }

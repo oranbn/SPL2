@@ -76,6 +76,7 @@ public class StudentService extends MicroService {
                     }
                 }
             }
+            System.out.println("Worker terminated for: "+getName());
         });
         thread.start();
     }

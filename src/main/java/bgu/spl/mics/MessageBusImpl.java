@@ -71,7 +71,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public void sendBroadcast(Broadcast b) {
+	public synchronized void sendBroadcast(Broadcast b) {
 		// TODO Auto-generated method stub
 		if(b.getClass()== TickBroadcast.class)
 		{
@@ -91,9 +91,7 @@ public class MessageBusImpl implements MessageBus {
 				if(microServiceBroadcasts.containsKey(m))
 					microServiceBroadcasts.get(m).add(b);
 		}
-		synchronized (this) {
 			notifyAll();
-		}
 	}
 
 
