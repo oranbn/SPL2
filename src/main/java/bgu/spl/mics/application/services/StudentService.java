@@ -41,32 +41,44 @@ public class StudentService extends MicroService {
     protected void initialize() {
         subscribeBroadcast(PublishConfrenceBroadcast.class, (PublishConfrenceBroadcast publishConfrenceBroadcast )->{
             List<Model> modelList = publishConfrenceBroadcast.getModelList();
+/*
             System.out.println(getName()+" Got publishconferenseBroadCast");
+*/
             for(Model m : modelList)
             {
                 if(this.student == m.getStudent())
                     student.setPublications(student.getPublications()+1);
                 else
                     student.setPapersRead(student.getPapersRead()+1);
+/*
                 System.out.println(getName()+" publictions: "+student.getPublications() +" read: "+student.getPapersRead());
+*/
             }
         });
         subscribeBroadcast(TerminateBroadcast.class,(t)-> terminate());
         Thread thread = new Thread(()-> {
             int i = 0;
+/*
             System.out.println(getName()+ " has "+modelList.size() +" Models");
+*/
             for(Model m: modelList) {
+/*
                 System.out.println(getName()+" iteration: "+i++);
+*/
                 Future<Model> trainModelFuture = sendEvent(new TrainModelEvent(m));
                 Model trainedModel = trainModelFuture.get();
+/*
                 System.out.println(getName()+" iteration: "+i +" passed trainmodel");
+*/
                 if(trainedModel == null || trainedModel.getStatus() == Model.Status.PreTrained || trainedModel.getStatus() == Model.Status.Training)
                     break;
                 if(trainedModel.getStatus() == Model.Status.Trained)
                 {
                     Future<Model> testModelFuture = sendEvent(new TestModelEvent(trainedModel));
                     Model testedModel = testModelFuture.get();
+/*
                     System.out.println(getName()+" iteration: "+i +" passed testmodel");
+*/
                     if(testedModel == null || testedModel.getResults() == Model.Results.None)
                         break;
                     if(testedModel.getResults() == Model.Results.Good)
@@ -76,7 +88,6 @@ public class StudentService extends MicroService {
                     }
                 }
             }
-            System.out.println("Worker terminated for: "+getName());
         });
         thread.start();
     }

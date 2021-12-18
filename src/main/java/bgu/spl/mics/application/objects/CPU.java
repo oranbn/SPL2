@@ -142,7 +142,7 @@ public class CPU {
      */
     public void tick() {
         if (ticks == 0) {
-            System.out.println("lost tick :)");
+//            System.out.println("lost tick :)");
             return;
         }
         ticks--;

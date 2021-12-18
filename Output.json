@@ -4,8 +4,8 @@
       "name": "Simba",
       "department": "Computer Science",
       "status": "MSc",
-      "publications": 0,
-      "papersRead": 4,
+      "publications": 1,
+      "papersRead": 1,
       "trainedModels": [
         {
           "name": "YOLO10",
@@ -14,8 +14,8 @@
             "processed": 200000,
             "size": 200000
           },
-          "status": "Trained",
-          "results": "None"
+          "status": "Tested",
+          "results": "Good"
         }
       ]
     },
@@ -24,15 +24,15 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 4,
+      "papersRead": 2,
       "trainedModels": []
     },
     {
       "name": "Pumba",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 3,
-      "papersRead": 1,
+      "publications": 0,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "Bert",
@@ -41,28 +41,8 @@
             "processed": 1000000,
             "size": 1000000
           },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "GPT4",
-          "data": {
-            "type": "Text",
-            "processed": 1000000,
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        },
-        {
-          "name": "GPT5",
-          "data": {
-            "type": "Text",
-            "processed": 200000,
-            "size": 200000
-          },
-          "status": "Tested",
-          "results": "Good"
+          "status": "Trained",
+          "results": "None"
         }
       ]
     },
@@ -70,8 +50,8 @@
       "name": "Timon",
       "department": "SE",
       "status": "MSc",
-      "publications": 0,
-      "papersRead": 4,
+      "publications": 1,
+      "papersRead": 1,
       "trainedModels": [
         {
           "name": "Percepetron",
@@ -90,6 +70,16 @@
             "processed": 1000000,
             "size": 1000000
           },
+          "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "MoreStyleGAN",
+          "data": {
+            "type": "Images",
+            "processed": 100000,
+            "size": 100000
+          },
           "status": "Trained",
           "results": "None"
         }
@@ -99,8 +89,8 @@
       "name": "Nala",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 1,
-      "papersRead": 3,
+      "publications": 0,
+      "papersRead": 2,
       "trainedModels": [
         {
           "name": "YOLO9000",
@@ -119,8 +109,8 @@
             "processed": 1000000,
             "size": 1000000
           },
-          "status": "Tested",
-          "results": "Good"
+          "status": "Trained",
+          "results": "None"
         }
       ]
     }
@@ -129,32 +119,16 @@
     {
       "name": "ICML",
       "date": 0,
-      "publications": [
-        {
-          "name": "Bert",
-          "data": {
-            "type": "Text",
-            "processed": 1000000,
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "publications": []
     },
     {
       "name": "NeurIPS",
       "date": 0,
-      "publications": []
-    },
-    {
-      "name": "CVPR",
-      "date": 0,
       "publications": [
         {
-          "name": "GPT5",
+          "name": "YOLO10",
           "data": {
-            "type": "Text",
+            "type": "Images",
             "processed": 200000,
             "size": 200000
           },
@@ -164,13 +138,13 @@
       ]
     },
     {
-      "name": "ECCV",
+      "name": "CVPR",
       "date": 0,
       "publications": [
         {
-          "name": "VIT2",
+          "name": "GNN",
           "data": {
-            "type": "Images",
+            "type": "Tabular",
             "processed": 1000000,
             "size": 1000000
           },
@@ -180,23 +154,17 @@
       ]
     },
     {
+      "name": "ECCV",
+      "date": 0,
+      "publications": []
+    },
+    {
       "name": "AISTATS",
       "date": 0,
-      "publications": [
-        {
-          "name": "GPT4",
-          "data": {
-            "type": "Text",
-            "processed": 1000000,
-            "size": 1000000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
+      "publications": []
     }
   ],
   "cpuTimeUsed": 385000,
-  "gpuTimeUsed": 61440,
-  "batchesProcessed": 71347
+  "gpuTimeUsed": 66146,
+  "batchesProcessed": 70747
 }

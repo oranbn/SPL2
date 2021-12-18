@@ -31,7 +31,9 @@ public class ConferenceService extends MicroService {
         });
         subscribeBroadcast(TickBroadcast.class,(TickBroadcast t)->{if(confrenceInformation.tick(t)){terminate();
             sendBroadcast(new PublishConfrenceBroadcast(confrenceInformation.getModelList()));
+/*
             System.out.println("Model Amount: "+confrenceInformation.getModelList().size());
+*/
             }});
         subscribeBroadcast(TerminateBroadcast.class,(t)-> terminate());
     }

@@ -176,13 +176,13 @@ public class GPU {
      */
     public boolean trainModel(Model m) {
         if (training) {
-            System.out.println(name + " Denied in trainModel and the model is: "+m.getName());
+//            System.out.println(name + " Denied in trainModel and the model is: "+m.getName());
             return false;
         }
-        System.out.println(name + " Accepted in trainModel to the model: "+m.getName());
+//        System.out.println(name + " Accepted in trainModel to the model: "+m.getName());
         model = m;
         trainCounter++;
-        System.out.println(name+ " train counter is: "+trainCounter);
+//        System.out.println(name+ " train counter is: "+trainCounter);
         Model.Status status = Model.Status.Training;
         currentTicks = ticksNeeded;
         training = true;
@@ -226,10 +226,10 @@ public class GPU {
      */
     public boolean testModel(Model m) {
         if (training) {
-            System.out.println("Denied in testModel " + name);
+//            System.out.println("Denied in testModel " + name);
             return false;
         }
-        System.out.println("Accepted in testModel " + name);
+//        System.out.println("Accepted in testModel " + name);
         model = m;
         doTest();
         return true;
@@ -268,8 +268,8 @@ public class GPU {
                 model.setResults(bad);
         }
         model.setStatus(tested);
+        System.out.println("Finished testModel: " + model.getName() + " by: " + name);
         model = null;
-        System.out.println("Finished testModel " + name);
     }
 
     /**
@@ -321,10 +321,10 @@ public class GPU {
     public void finishTrain(){
         Model.Status status = Model.Status.Trained;
         model.setStatus(status);
-        model = null;
         training = false;
         currentTicks = 0;
-        System.out.println("Finished trainModel " + name);
+        System.out.println("Finished trainModel: " + model.getName() + " by: " + name);
+        model = null;
     }
 
     /**

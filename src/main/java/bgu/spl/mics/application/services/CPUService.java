@@ -16,7 +16,6 @@ public class CPUService extends MicroService {
     public CPUService(String name, CPU cpu) {
         super(name);
         this.cpu = cpu;
-        System.out.println(name);
         // TODO Implement this
     }
 

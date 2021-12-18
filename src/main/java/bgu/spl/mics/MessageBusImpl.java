@@ -89,7 +89,7 @@ public class MessageBusImpl implements MessageBus {
 		{
 			List<MicroService> microServiceList = broadcastHashMap.get(TerminateBroadcast.class);
 			for(MicroService m :microServiceList) {
-				System.out.println(m.getName());
+				System.out.println(m.getName() + " is terminated");
 				if (microServiceBroadcasts.containsKey(m))
 					microServiceBroadcasts.get(m).add(b);
 			}

@@ -37,17 +37,13 @@ public class CRMSRunner {
     private static ExecutorService executor;
     private static JsonOutput jsonOutput;
     public static void main(String[] args) {
+        System.out.println("Starting Program");
         initFields();
         initObjects();
         runServices();
         waitTillDone();
-        System.out.println("oran");
+        System.out.println("Making Output file");
         MakeOutputFile();
-        Set<Thread> threads = Thread.getAllStackTraces().keySet();
-        System.out.printf("%-15s \t %-15s \t %-15s \t %s\n", "Name", "State", "Priority", "isDaemon");
-        for (Thread t : threads) {
-            System.out.printf("%-15s \t %-15s \t %-15d \t %s\n", t.getName(), t.getState(), t.getPriority(), t.isDaemon());
-        }
     }
 
     private static void MakeOutputFile() {

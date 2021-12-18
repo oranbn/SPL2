@@ -143,8 +143,6 @@ public class Cluster {
 				roundRobin1080=0;
 			}
 		}
-		if(count<0)
-			System.out.println(cpu +" faild to get next databatch");
 	}
 
 
