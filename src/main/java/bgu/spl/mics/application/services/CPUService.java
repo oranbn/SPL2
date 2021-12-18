@@ -16,12 +16,15 @@ public class CPUService extends MicroService {
     public CPUService(String name, CPU cpu) {
         super(name);
         this.cpu = cpu;
+        System.out.println(name);
         // TODO Implement this
     }
 
     @Override
     protected void initialize() {
-        subscribeBroadcast(TickBroadcast.class,(TickBroadcast t)-> cpu.tick());
+        subscribeBroadcast(TickBroadcast.class,(TickBroadcast t)-> {
+            System.out.println(getName() +" doing tick");
+            cpu.tick();});
         subscribeBroadcast(TerminateBroadcast.class,(t)-> terminate());
     }
 }

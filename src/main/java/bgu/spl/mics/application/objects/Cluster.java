@@ -33,7 +33,12 @@ public class Cluster {
 	HashMap<Integer, List<DataBatch>> unprocessedDataBatchMapGPU_RTX2080;
 	HashMap<Integer, List<DataBatch>> unprocessedDataBatchMapGPU_GTX1080;
 	HashMap<Integer, List<DataBatch>> processedDataBatchMap;
-	//private Statistics statistics;
+
+	public Statistics getStatistics() {
+		return statistics;
+	}
+
+	private final Statistics statistics;
 	private Cluster(){
 		GPUS = new ArrayList<GPU>();
 		CPUS = new ArrayList<CPU>();
@@ -44,6 +49,7 @@ public class Cluster {
 		roundRobin3090 = 0;
 		roundRobin2080 = 0;
 		roundRobin1080 = 0;
+		statistics = new Statistics();
 	}
 
 	public synchronized void addGPU(GPU gpu)
@@ -89,11 +95,16 @@ public class Cluster {
 	}
 
 	public synchronized void getNextDataBatch(CPU cpu) {
+		int count = GPUS.size();
 		while(true) {
+			if(count<0)
+				break;
+			count--;
 			if (roundRobin3090 < unprocessedDataBatchMapGPU_RTX3090.size()) {
 				int key = (int) unprocessedDataBatchMapGPU_RTX3090.keySet().toArray()[roundRobin3090];
 				if (unprocessedDataBatchMapGPU_RTX3090.get(key).size() > 0) {
-					cpu.canProcess(unprocessedDataBatchMapGPU_RTX3090.get(key).get(0), key);
+					if(cpu.canProcess(unprocessedDataBatchMapGPU_RTX3090.get(key).get(0), key))
+						unprocessedDataBatchMapGPU_RTX3090.get(key).remove(0);
 					roundRobin3090++;
 					break;
 				}
@@ -103,7 +114,8 @@ public class Cluster {
 			else if(roundRobin2080 < unprocessedDataBatchMapGPU_RTX2080.size()) {
 				int key = (int) unprocessedDataBatchMapGPU_RTX2080.keySet().toArray()[roundRobin2080];
 				if (unprocessedDataBatchMapGPU_RTX2080.get(key).size() > 0) {
-					cpu.canProcess(unprocessedDataBatchMapGPU_RTX2080.get(key).get(0), key);
+					if(cpu.canProcess(unprocessedDataBatchMapGPU_RTX2080.get(key).get(0), key))
+						unprocessedDataBatchMapGPU_RTX2080.get(key).remove(0);
 					roundRobin2080++;
 					roundRobin3090 = 0;
 					break;
@@ -114,7 +126,8 @@ public class Cluster {
 			else if(roundRobin1080 < unprocessedDataBatchMapGPU_GTX1080.size()) {
 				int key = (int) unprocessedDataBatchMapGPU_GTX1080.keySet().toArray()[roundRobin1080];
 				if (unprocessedDataBatchMapGPU_GTX1080.get(key).size() > 0) {
-					cpu.canProcess(unprocessedDataBatchMapGPU_GTX1080.get(key).get(0), key);
+					if(cpu.canProcess(unprocessedDataBatchMapGPU_GTX1080.get(key).get(0), key))
+						unprocessedDataBatchMapGPU_GTX1080.get(key).remove(0);
 					roundRobin1080++;
 					roundRobin3090 = 0;
 					roundRobin2080 = 0;

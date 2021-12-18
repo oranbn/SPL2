@@ -142,6 +142,11 @@ public class CRMSRunner {
             StudentServiceThreads.add(thread);
             thread.start();
         }
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         timeServiceThread = new Thread(timeService);
         timeServiceThread.start();
     }

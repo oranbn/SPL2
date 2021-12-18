@@ -9,22 +9,22 @@
             [
                 {
                     "name": "YOLO10",
-                    "type": "images",
+                    "type": "Images",
                     "size": 200000
                 },
                 {
                     "name": "ResNet9000",
-                    "type": "images",
+                    "type": "Images",
                     "size": 200000
                 },
                 {
                     "name": "LessEfficientNet",
-                    "type": "images",
+                    "type": "Images",
                     "size": 20000
                 },
                 {
                     "name": "DensestNet",
-                    "type": "images",
+                    "type": "Images",
                     "size": 200000
                 }
             ]
@@ -38,7 +38,7 @@
             [
                 {
                     "name": "VIT",
-                    "type": "images",
+                    "type": "Images",
                     "size": 100000000
                 }
             ]
@@ -76,7 +76,7 @@
         {
             "name": "Timon",
             "department": "SE",            
-            "status": "MsC",
+            "status": "MSc",
             "models":
             [
                 {
@@ -110,22 +110,22 @@
             [
                 {
                     "name": "YOLO9000",
-                    "type": "images",
+                    "type": "Images",
                     "size": 100000
                 },
                 {
                     "name": "VIT2",
-                    "type": "images",
+                    "type": "Images",
                     "size": 1000000
                 },
                 {
                     "name": "MuchMoreEfficientNet",
-                    "type": "images",
+                    "type": "Images",
                     "size": 20000
                 },
                 {
                     "name": "DenserNet",
-                    "type": "images",
+                    "type": "Images",
                     "size": 100000
                 }
             ]
@@ -136,12 +136,12 @@
     "CPUS": [32,32,32,16,16,16,16],
     "Conferences":
     [
-        {"name": "ICML", "date": 2000},
-        {"name": "NeurIPS", "date": 2500},
-        {"name": "CVPR", "date": 3000},
-        {"name": "ECCV", "date": 4000},
-        {"name": "AISTATS", "date": 5000}
+        {"name": "ICML", "date": 20000},
+        {"name": "NeurIPS", "date": 25000},
+        {"name": "CVPR", "date": 30000},
+        {"name": "ECCV", "date": 40000},
+        {"name": "AISTATS", "date": 50000}
     ],
     "TickTime": 1,
-    "Duration": 25500
+    "Duration": 55000
 }

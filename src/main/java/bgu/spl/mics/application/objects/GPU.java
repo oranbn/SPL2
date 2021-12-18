@@ -289,7 +289,7 @@ public class GPU {
         System.out.println("GPU: " + getName() + " Passed first condition");
 */
         currentTicks--;
-        Statistics.getInstance().setGPU_timeUnitUsed();
+        cluster.getStatistics().setGPU_timeUnitUsed();
         if (currentTicks == 0) {
             processedDataBatchQueue.poll();
             currentTicks = ticksNeeded;

@@ -5,13 +5,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Statistics {
-    private static class StatisticsHolder{
-        private final static Statistics instance = new Statistics();
-    }
-
-    private AtomicInteger CPU_processedDataBatches;
-    private AtomicInteger CPU_timeUnitUsed;
-    private AtomicInteger GPU_timeUnitUsed;
+    private final AtomicInteger CPU_processedDataBatches;
+    private final AtomicInteger CPU_timeUnitUsed;
+    private final AtomicInteger GPU_timeUnitUsed;
 
     public synchronized int getCPU_processedDataBatches() {
         return CPU_processedDataBatches.get();
@@ -49,15 +45,11 @@ public class Statistics {
         while (!GPU_timeUnitUsed.compareAndSet(value,value+1));
     }
 
-    private Statistics(){
+    public Statistics(){
         CPU_processedDataBatches = new AtomicInteger(0);
         CPU_timeUnitUsed = new AtomicInteger(0);
         GPU_timeUnitUsed = new AtomicInteger(0);
 
 
-    }
-
-    public static Statistics getInstance(){
-        return StatisticsHolder.instance;
     }
 }

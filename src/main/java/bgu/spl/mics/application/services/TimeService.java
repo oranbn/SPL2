@@ -27,11 +27,6 @@ public class TimeService extends MicroService{
 
 	@Override
 	protected void initialize() {
-		try {
-			Thread.sleep(250);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		while(duration>0)
 		{
 			try {
@@ -40,11 +35,9 @@ public class TimeService extends MicroService{
 				System.out.println(duration);
 				Thread.sleep(tickTime);
 			} catch (InterruptedException e) {
-				System.out.println("oran is sad, because we have a bug :( "+e.getMessage());
 				e.printStackTrace();
 			}
 		}
-		System.out.println("samak yatzati ahootza");
 		sendBroadcast(new TerminateBroadcast());
 	terminate();
 	}

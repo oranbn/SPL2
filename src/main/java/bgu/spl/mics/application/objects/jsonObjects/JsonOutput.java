@@ -1,5 +1,6 @@
 package bgu.spl.mics.application.objects.jsonObjects;
 
+import bgu.spl.mics.application.objects.Cluster;
 import bgu.spl.mics.application.objects.Statistics;
 
 import java.util.ArrayList;
@@ -15,9 +16,9 @@ public class JsonOutput {
     public JsonOutput() {
         this.students = new ArrayList<>();
         conferences = new ArrayList<>();
-        cpuTimeUsed = Statistics.getInstance().getCPU_timeUnitUsed();
-        gpuTimeUsed = Statistics.getInstance().getGPU_timeUnitUsed();
-        batchesProcessed = Statistics.getInstance().getCPU_processedDataBatches();
+        cpuTimeUsed = Cluster.getInstance().getStatistics().getCPU_timeUnitUsed();
+        gpuTimeUsed = Cluster.getInstance().getStatistics().getGPU_timeUnitUsed();
+        batchesProcessed = Cluster.getInstance().getStatistics().getCPU_processedDataBatches();
     }
 
     public List<JsonStudent> getStudents() {
