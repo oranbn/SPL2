@@ -23,7 +23,7 @@ public class CPUService extends MicroService {
     @Override
     protected void initialize() {
         subscribeBroadcast(TickBroadcast.class,(TickBroadcast t)-> {
-            System.out.println(getName() +" doing tick");
+            /*System.out.println(getName() +" doing tick");*/
             cpu.tick();});
         subscribeBroadcast(TerminateBroadcast.class,(t)-> terminate());
     }

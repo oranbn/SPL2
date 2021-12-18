@@ -32,7 +32,7 @@ public class TimeService extends MicroService{
 			try {
 				sendBroadcast(new TickBroadcast(tickTime));
 				duration -= 1;
-				System.out.println(duration);
+				/*System.out.println(duration);*/
 				Thread.sleep(tickTime);
 			} catch (InterruptedException e) {
 				e.printStackTrace();

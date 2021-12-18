@@ -164,7 +164,7 @@ public class CRMSRunner {
     }
     public static void initObjects(){
         try {
-            File inputFile = new File("C:\\Users\\User\\Desktop\\SPL2\\example_input.json");
+            File inputFile = new File("C:\\Users\\yoavi\\OneDrive - post.bgu.ac.il\\Study\\Semester C\\SPL\\Projects\\hw2-OFFICIAL\\SPL2\\example_input.json");
             JsonElement fileElement = JsonParser.parseReader(new FileReader(inputFile));
             JsonObject fileObject = fileElement.getAsJsonObject();
             initStudents(fileObject.get("Students").getAsJsonArray());

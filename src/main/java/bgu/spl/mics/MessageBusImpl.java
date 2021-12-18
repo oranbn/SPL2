@@ -50,7 +50,7 @@ public class MessageBusImpl implements MessageBus {
 
 
 	@Override
-	public <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) { //maybe sync it
+	public synchronized <T> void subscribeEvent(Class<? extends Event<T>> type, MicroService m) { //maybe sync it
 		// TODO Auto-generated method stub
 		if(registerList.contains(m))
 			if(!eventsHashMap.get(type).contains(m))
@@ -58,7 +58,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) { //maybe sync it
+	public synchronized void subscribeBroadcast(Class<? extends Broadcast> type, MicroService m) { //maybe sync it
 		// TODO Auto-generated method stub
 		if(registerList.contains(m))
 			if(!broadcastHashMap.get(type).contains(m))
@@ -71,7 +71,7 @@ public class MessageBusImpl implements MessageBus {
 	}
 
 	@Override
-	public synchronized void sendBroadcast(Broadcast b) {
+	public void sendBroadcast(Broadcast b) {
 		// TODO Auto-generated method stub
 		if(b.getClass()== TickBroadcast.class)
 		{
@@ -87,11 +87,16 @@ public class MessageBusImpl implements MessageBus {
 		}
 		if(b.getClass()== TerminateBroadcast.class)
 		{
-			for(MicroService m :broadcastHashMap.get(TerminateBroadcast.class))
-				if(microServiceBroadcasts.containsKey(m))
+			List<MicroService> microServiceList = broadcastHashMap.get(TerminateBroadcast.class);
+			for(MicroService m :microServiceList) {
+				System.out.println(m.getName());
+				if (microServiceBroadcasts.containsKey(m))
 					microServiceBroadcasts.get(m).add(b);
+			}
 		}
+		synchronized (this) {
 			notifyAll();
+		}
 	}
 
 

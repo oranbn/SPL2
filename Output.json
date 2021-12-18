@@ -5,7 +5,7 @@
       "department": "Computer Science",
       "status": "MSc",
       "publications": 0,
-      "papersRead": 2,
+      "papersRead": 4,
       "trainedModels": [
         {
           "name": "YOLO10",
@@ -24,14 +24,14 @@
       "department": "EE",
       "status": "PhD",
       "publications": 0,
-      "papersRead": 2,
+      "papersRead": 4,
       "trainedModels": []
     },
     {
       "name": "Pumba",
       "department": "Computer Science",
       "status": "PhD",
-      "publications": 1,
+      "publications": 3,
       "papersRead": 1,
       "trainedModels": [
         {
@@ -51,8 +51,18 @@
             "processed": 1000000,
             "size": 1000000
           },
-          "status": "Trained",
-          "results": "None"
+          "status": "Tested",
+          "results": "Good"
+        },
+        {
+          "name": "GPT5",
+          "data": {
+            "type": "Text",
+            "processed": 200000,
+            "size": 200000
+          },
+          "status": "Tested",
+          "results": "Good"
         }
       ]
     },
@@ -61,7 +71,7 @@
       "department": "SE",
       "status": "MSc",
       "publications": 0,
-      "papersRead": 2,
+      "papersRead": 4,
       "trainedModels": [
         {
           "name": "Percepetron",
@@ -90,7 +100,7 @@
       "department": "Computer Science",
       "status": "PhD",
       "publications": 1,
-      "papersRead": 1,
+      "papersRead": 3,
       "trainedModels": [
         {
           "name": "YOLO9000",
@@ -98,6 +108,16 @@
             "type": "Images",
             "processed": 100000,
             "size": 100000
+          },
+          "status": "Tested",
+          "results": "Bad"
+        },
+        {
+          "name": "VIT2",
+          "data": {
+            "type": "Images",
+            "processed": 1000000,
+            "size": 1000000
           },
           "status": "Tested",
           "results": "Good"
@@ -108,32 +128,6 @@
   "conferences": [
     {
       "name": "ICML",
-      "date": 0,
-      "publications": []
-    },
-    {
-      "name": "NeurIPS",
-      "date": 0,
-      "publications": [
-        {
-          "name": "YOLO9000",
-          "data": {
-            "type": "Images",
-            "processed": 100000,
-            "size": 100000
-          },
-          "status": "Tested",
-          "results": "Good"
-        }
-      ]
-    },
-    {
-      "name": "CVPR",
-      "date": 0,
-      "publications": []
-    },
-    {
-      "name": "ECCV",
       "date": 0,
       "publications": [
         {
@@ -149,12 +143,60 @@
       ]
     },
     {
-      "name": "AISTATS",
+      "name": "NeurIPS",
       "date": 0,
       "publications": []
+    },
+    {
+      "name": "CVPR",
+      "date": 0,
+      "publications": [
+        {
+          "name": "GPT5",
+          "data": {
+            "type": "Text",
+            "processed": 200000,
+            "size": 200000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
+      "name": "ECCV",
+      "date": 0,
+      "publications": [
+        {
+          "name": "VIT2",
+          "data": {
+            "type": "Images",
+            "processed": 1000000,
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
+    },
+    {
+      "name": "AISTATS",
+      "date": 0,
+      "publications": [
+        {
+          "name": "GPT4",
+          "data": {
+            "type": "Text",
+            "processed": 1000000,
+            "size": 1000000
+          },
+          "status": "Tested",
+          "results": "Good"
+        }
+      ]
     }
   ],
   "cpuTimeUsed": 385000,
-  "gpuTimeUsed": 66838,
-  "batchesProcessed": 71248
+  "gpuTimeUsed": 61440,
+  "batchesProcessed": 71347
 }

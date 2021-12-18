@@ -95,7 +95,7 @@ public class Cluster {
 	}
 
 	public synchronized void getNextDataBatch(CPU cpu) {
-		int count = GPUS.size();
+		int count = unprocessedDataBatchMapGPU_RTX3090.size()*4 + unprocessedDataBatchMapGPU_RTX2080.size()*2 + unprocessedDataBatchMapGPU_GTX1080.size() ;
 		while(true) {
 			if(count<0)
 				break;
@@ -143,6 +143,8 @@ public class Cluster {
 				roundRobin1080=0;
 			}
 		}
+		if(count<0)
+			System.out.println(cpu +" faild to get next databatch");
 	}
 
 
